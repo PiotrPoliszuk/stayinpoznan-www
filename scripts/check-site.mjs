@@ -66,7 +66,12 @@ for (const file of htmlFiles) {
     if (src?.startsWith("/")) {
       const imagePath = join(root, src);
       if (!await exists(imagePath)) errors.push(`${name}: missing image ${src}`);
-      else if ((await stat(imagePath)).size < 1024) errors.push(`${name}: empty or suspiciously small image ${src}`);
+      else if (extname(imagePath).toLowerCase() === ".svg") {
+        const svg = await readFile(imagePath, "utf8");
+        if (svg.length < 200 || !/<svg\b/i.test(svg) || !/viewBox=/i.test(svg) || !/<(?:path|rect|circle)\b/i.test(svg)) {
+          errors.push(`${name}: invalid or suspiciously small SVG ${src}`);
+        }
+      } else if ((await stat(imagePath)).size < 1024) errors.push(`${name}: empty or suspiciously small image ${src}`);
     }
   }
 

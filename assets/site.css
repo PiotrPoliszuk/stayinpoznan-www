@@ -51,10 +51,11 @@
   .site-header.is-sticky { backdrop-filter: blur(14px); background: color-mix(in srgb, var(--night) 92%, transparent); box-shadow: 0 1px 0 rgba(255,255,255,.08); padding-block: 13px; position: fixed; }
   .nav-wrap, .site-menu { align-items: center; display: flex; }
   .nav-wrap { justify-content: space-between; }
-  .wordmark { align-items: center; display: inline-flex; font-size: .95rem; font-weight: 720; gap: 11px; letter-spacing: .02em; text-decoration: none; }
-  .wordmark i { color: var(--gold); font-family: var(--serif); font-size: 1.16em; font-weight: 400; }
-  .wordmark-mark { display: block; flex: 0 0 auto; height: 42px; width: 42px; }
-  .site-header.is-sticky .wordmark-mark { height: 38px; width: 38px; }
+  .wordmark { align-items: center; color: var(--white); display: inline-flex; gap: 13px; text-decoration: none; }
+  .wordmark-mark { display: block; flex: 0 0 auto; height: 46px; transition: height .3s, width .3s; width: 46px; }
+  .wordmark-copy { align-items: baseline; display: inline-flex; font-family: var(--sans); font-size: .76rem; font-weight: 590; gap: .55em; letter-spacing: .135em; line-height: 1; text-transform: uppercase; white-space: nowrap; }
+  .wordmark-copy strong { font-weight: 850; letter-spacing: .105em; }
+  .site-header.is-sticky .wordmark-mark { height: 40px; width: 40px; }
   .site-menu { gap: 28px; }
   .site-menu > a { font-size: .78rem; font-weight: 720; letter-spacing: .06em; text-decoration: none; }
   .site-menu > a:not(.nav-cta):hover { color: var(--gold); }
@@ -93,7 +94,7 @@
   .footer-grid a { text-decoration: none; }
   .footer-grid a:hover { color: var(--gold); }
   .footer-grid h2 { color: var(--white); font-family: var(--sans); font-size: .73rem; font-weight: 800; letter-spacing: .16em; margin-bottom: 12px; text-transform: uppercase; }
-  .wordmark-footer { color: var(--white); font-size: 1.1rem !important; margin-bottom: 14px; }
+  .wordmark-footer { color: var(--white); margin-bottom: 14px; }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); display: flex; font-size: .68rem; justify-content: space-between; letter-spacing: .08em; margin-top: 60px; padding-top: 24px; text-transform: uppercase; }
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
   .reveal.is-visible { opacity: 1; transform: none; }
