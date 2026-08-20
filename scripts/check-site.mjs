@@ -60,8 +60,9 @@ for (const file of htmlFiles) {
     const tag = image[0];
     const src = attribute(tag, "src");
     const alt = attribute(tag, "alt");
+    const decorative = alt === "" && attribute(tag, "aria-hidden") === "true";
     if (!src) errors.push(`${name}: image without src`);
-    if (alt === undefined || alt.trim() === "") errors.push(`${name}: image without useful alt text (${src || "unknown"})`);
+    if (alt === undefined || (alt.trim() === "" && !decorative)) errors.push(`${name}: image without useful alt text (${src || "unknown"})`);
     if (src?.startsWith("/")) {
       const imagePath = join(root, src);
       if (!await exists(imagePath)) errors.push(`${name}: missing image ${src}`);
@@ -81,7 +82,7 @@ for (const file of htmlFiles) {
 
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 if (sitemap.includes("/apartamenty/antresola/")) errors.push("sitemap.xml: noindex antresola page must not be listed");
-if ((sitemap.match(/<url>/g) || []).length !== 20) errors.push("sitemap.xml: expected 20 indexable URLs");
+if ((sitemap.match(/<url>/g) || []).length !== 23) errors.push("sitemap.xml: expected 23 indexable URLs");
 
 const redirects = await readFile(join(root, "_redirects"), "utf8");
 for (const [alias, target] of [
@@ -90,6 +91,10 @@ for (const [alias, target] of [
   ["/targi", "/wydarzenia/"],
   ["/apartament", "/apartamenty/"],
   ["/stary-rynek", "/poznan/stary-rynek/"],
+  ["/weganskie", "/poznan/weganskie-restauracje/"],
+  ["/clubbing", "/poznan/clubbing/"],
+  ["/kluby", "/poznan/clubbing/"],
+  ["/przewodnik", "/poznan/przewodnik/"],
 ]) {
   if (!redirects.includes(`${alias} ${target} 301`)) errors.push(`_redirects: missing campaign alias ${alias}`);
   if (!await exists(join(root, target, "index.html"))) errors.push(`_redirects: missing target ${target}`);
