@@ -94,7 +94,21 @@ for (const [alias, target] of [
   if (!redirects.includes(`${alias} ${target} 301`)) errors.push(`_redirects: missing campaign alias ${alias}`);
   if (!await exists(join(root, target, "index.html"))) errors.push(`_redirects: missing target ${target}`);
 }
-if (!redirects.includes("https://oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301")) errors.push("_redirects: missing oldmarketsquare.pl canonical redirect");
+for (const line of redirects.split("\n").map((line) => line.trim()).filter((line) => line && !line.startsWith("#"))) {
+  if (!line.startsWith("/")) errors.push(`_redirects: unsupported domain-level source ${line.split(/\s+/)[0]}`);
+}
+
+const bulkRedirects = await readFile(join(root, "cloudflare", "bulk-redirects.csv"), "utf8");
+for (const expected of [
+  "www.stayinpoznan.pl,https://stayinpoznan.pl,301,TRUE,FALSE,TRUE,TRUE",
+  "oldmarketsquare.pl,https://stayinpoznan.pl,301,TRUE,TRUE,TRUE,TRUE",
+  "stayinpoznan-www.pages.dev,https://stayinpoznan.pl,301,TRUE,FALSE,TRUE,TRUE",
+]) {
+  if (!bulkRedirects.includes(expected)) errors.push(`cloudflare/bulk-redirects.csv: missing ${expected.split(",")[0]}`);
+}
+
+const headers = await readFile(join(root, "_headers"), "utf8");
+if (!headers.includes("https://:version.stayinpoznan-www.pages.dev/*\n  X-Robots-Tag: noindex")) errors.push("_headers: preview deployments must be noindex");
 
 if (errors.length) {
   console.error(errors.map((error) => `ERROR ${error}`).join("\n"));

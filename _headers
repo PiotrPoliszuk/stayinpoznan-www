@@ -12,3 +12,10 @@
 
 /assets/*.js
   Cache-Control: public, max-age=86400
+
+# Never index the production pages.dev hostname or public deployment previews.
+https://stayinpoznan-www.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.stayinpoznan-www.pages.dev/*
+  X-Robots-Tag: noindex
