@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 72" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">Stay in Poznań</title>
+  <rect width="96" height="72" rx="8" fill="#fff"/>
+  <g fill="none" stroke="#0b1822" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.6">
+    <circle cx="29" cy="18" r="11"/>
+    <circle cx="67" cy="18" r="11"/>
+    <path d="M25 15v9l4 4 4-4v-9M25 18h8M29 12v3"/>
+    <path d="M63 15v9l4 4 4-4v-9M63 18h8M67 12v3"/>
+    <path d="M18 63V39c0-6 5-11 11-11s11 5 11 11v24H18Z"/>
+    <path d="M56 63V39c0-6 5-11 11-11s11 5 11 11v24H56Z"/>
+    <path d="M18 45l22 13M56 58l22-13"/>
+    <path d="M10 59 44 30M11 53l6 7M38 32l5 6"/>
+    <circle cx="56" cy="34" r="4"/>
+    <path d="M59 37 86 60M82 57l4-5M78 53l4-5"/>
+  </g>
+  <g fill="#0b1822">
+    <circle cx="27" cy="19" r="1.25"/>
+    <circle cx="31" cy="19" r="1.25"/>
+    <circle cx="65" cy="19" r="1.25"/>
+    <circle cx="69" cy="19" r="1.25"/>
+  </g>
+</svg>
