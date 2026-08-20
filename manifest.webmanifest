@@ -1,0 +1,9 @@
+{
+  "name": "Stay in Poznań",
+  "short_name": "Stay in Poznań",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#101a24",
+  "icons": [{ "src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

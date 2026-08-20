@@ -1,41 +1,47 @@
-# StayInPoznan.pl
+# Stay in Poznań
 
-Static landing page for Stay In Poznań apartments.
+Fast, dependency-free static site for the Stay in Poznań apartments at Wielka 23.
 
-## Deploy target
+## What is included
 
-Cloudflare Pages
+- Polish and English home pages
+- two complete apartment landing pages with authentic listing photos
+- a noindex preview for the upcoming mezzanine apartment
+- local Poznań guides and FAQ
+- event landing pages for verified 2026/2027 dates
+- responsive design, accessible gallery and reduced-motion support
+- canonical URLs, hreflang, sitemap, robots.txt and JSON-LD
+- Cloudflare Pages redirects and security/cache headers
 
-## Domains
+## Build and validate
 
-Primary:
-- stayinpoznan.pl
-- www.stayinpoznan.pl
+No package install is required. Use Node.js 20 or newer.
 
-Redirect:
-- oldmarketsquare.pl -> https://stayinpoznan.pl/
-- www.oldmarketsquare.pl -> https://stayinpoznan.pl/
+```bash
+node scripts/build.mjs
+node scripts/check-site.mjs
+```
 
-## Local preview
+To preview locally:
 
 ```bash
 python3 -m http.server 8088
 ```
 
-Open:
+Open `http://localhost:8088`.
 
-```text
-http://localhost:8088
-```
+## Publishing flow
 
-## Cloudflare Pages setup
+1. Gitea remains the source of truth.
+2. A feature branch is mirrored or pushed to GitHub.
+3. Cloudflare Pages creates a branch preview.
+4. Merge to `main` only after visual and content approval.
+5. Cloudflare Pages publishes `main` to production.
 
-Framework preset: None  
-Build command: empty  
-Build output directory: `/`
+The generated HTML is committed, so Cloudflare Pages keeps the existing setup:
 
-## Git flow
+- Framework preset: None
+- Build command: empty
+- Build output directory: `/`
 
-Local Gitea can be source of truth.
-Mirror/push to GitHub.
-Cloudflare Pages deploys from GitHub main branch.
+See [docs/cloudflare-setup.md](docs/cloudflare-setup.md) and [docs/seo-strategy.md](docs/seo-strategy.md).

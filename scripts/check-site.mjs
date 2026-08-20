@@ -1,0 +1,91 @@
+import { access, readFile, readdir, stat } from "node:fs/promises";
+import { dirname, extname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const errors = [];
+
+async function walk(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    if (entry.name === ".git" || entry.name === "node_modules") continue;
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(path));
+    else files.push(path);
+  }
+  return files;
+}
+
+async function exists(path) {
+  try { await access(path); return true; } catch { return false; }
+}
+
+function attribute(tag, name) {
+  return tag.match(new RegExp(`\\b${name}=["']([^"']*)["']`, "i"))?.[1];
+}
+
+const files = await walk(root);
+const htmlFiles = files.filter((file) => extname(file) === ".html");
+const titles = new Map();
+const canonicals = new Map();
+
+for (const file of htmlFiles) {
+  const name = relative(root, file);
+  const html = await readFile(file, "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1]?.trim();
+  const canonical = html.match(/<link rel="canonical" href="([^"]+)"/i)?.[1]?.trim();
+  const h1Count = (html.match(/<h1\b/gi) || []).length;
+
+  if (!title || title.length < 12) errors.push(`${name}: missing or short title`);
+  if (!description || description.length < 70) errors.push(`${name}: missing or short meta description`);
+  if (!canonical?.startsWith("https://stayinpoznan.pl/")) errors.push(`${name}: invalid canonical`);
+  if (h1Count !== 1) errors.push(`${name}: expected one H1, found ${h1Count}`);
+  if (html.includes("poznan-old-town.webp") || html.includes("placeholder")) errors.push(`${name}: rejected or placeholder asset reference`);
+  if (title) {
+    if (titles.has(title)) errors.push(`${name}: duplicate title also used by ${titles.get(title)}`);
+    titles.set(title, name);
+  }
+  if (canonical) {
+    if (canonicals.has(canonical)) errors.push(`${name}: duplicate canonical also used by ${canonicals.get(canonical)}`);
+    canonicals.set(canonical, name);
+  }
+
+  for (const script of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) {
+    try { JSON.parse(script[1]); } catch (error) { errors.push(`${name}: invalid JSON-LD: ${error.message}`); }
+  }
+
+  for (const image of html.matchAll(/<img\b[^>]*>/gi)) {
+    const tag = image[0];
+    const src = attribute(tag, "src");
+    const alt = attribute(tag, "alt");
+    if (!src) errors.push(`${name}: image without src`);
+    if (alt === undefined || alt.trim() === "") errors.push(`${name}: image without useful alt text (${src || "unknown"})`);
+    if (src?.startsWith("/")) {
+      const imagePath = join(root, src);
+      if (!await exists(imagePath)) errors.push(`${name}: missing image ${src}`);
+      else if ((await stat(imagePath)).size < 1024) errors.push(`${name}: empty or suspiciously small image ${src}`);
+    }
+  }
+
+  for (const link of html.matchAll(/<a\b[^>]*>/gi)) {
+    const href = attribute(link[0], "href");
+    if (!href || !href.startsWith("/") || href.startsWith("//")) continue;
+    const clean = href.split("#")[0].split("?")[0];
+    if (!clean) continue;
+    const target = clean.endsWith("/") ? join(root, clean, "index.html") : join(root, clean);
+    if (!await exists(target)) errors.push(`${name}: broken internal link ${href}`);
+  }
+}
+
+const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
+if (sitemap.includes("/apartamenty/antresola/")) errors.push("sitemap.xml: noindex antresola page must not be listed");
+if ((sitemap.match(/<url>/g) || []).length !== 20) errors.push("sitemap.xml: expected 20 indexable URLs");
+
+if (errors.length) {
+  console.error(errors.map((error) => `ERROR ${error}`).join("\n"));
+  process.exit(1);
+}
+
+console.log(`Validated ${htmlFiles.length} HTML files, unique metadata, JSON-LD, images, links and sitemap.`);
