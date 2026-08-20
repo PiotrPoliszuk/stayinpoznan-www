@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Stay in Poznań</title>
+  <desc id="logo-desc">Nowoczesny znak kamieniczki z dwoma poznańskimi koziołkami</desc>
+  <path d="M11 54V25.5L32 8l21 17.5V54Z" fill="#101a24" stroke="#d5a65a" stroke-linejoin="round" stroke-width="2.4"/>
+  <path d="M17 54V29.5L32 17l15 12.5V54" fill="none" stroke="#d5a65a" stroke-linejoin="round" stroke-width="1.35" opacity=".62"/>
+  <path d="M11 54h42" fill="none" stroke="#d5a65a" stroke-linecap="round" stroke-width="2.4"/>
+  <g>
+    <path d="M24.2 27.1c2.8-.5 5.2 1 6.2 3.3L32 33l-1.9 2c-1.1 1.1-2.7 1.3-4.1.7l-2.4 4.5c-3.4-1.5-5.2-4.4-4.6-7.4l-3.8-2.3 5.1-1.2c1-1.1 2.3-1.9 3.9-2.2Z" fill="#fffdf8"/>
+    <path d="M24.7 27.2c-4.4-1.4-6.3-5.6-4.2-9.2.5 3.1 2.8 5.4 6.4 6.1" fill="none" stroke="#fffdf8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.65"/>
+    <circle cx="27.4" cy="31.1" r=".85" fill="#101a24"/>
+    <g transform="translate(64 0) scale(-1 1)">
+      <path d="M24.2 27.1c2.8-.5 5.2 1 6.2 3.3L32 33l-1.9 2c-1.1 1.1-2.7 1.3-4.1.7l-2.4 4.5c-3.4-1.5-5.2-4.4-4.6-7.4l-3.8-2.3 5.1-1.2c1-1.1 2.3-1.9 3.9-2.2Z" fill="#fffdf8"/>
+      <path d="M24.7 27.2c-4.4-1.4-6.3-5.6-4.2-9.2.5 3.1 2.8 5.4 6.4 6.1" fill="none" stroke="#fffdf8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.65"/>
+      <circle cx="27.4" cy="31.1" r=".85" fill="#101a24"/>
+    </g>
+  </g>
+  <circle cx="32" cy="33.2" r="1.15" fill="#d5a65a"/>
+  <path d="M27 54V46h10v8" fill="none" stroke="#d5a65a" stroke-linejoin="round" stroke-width="1.6"/>
+</svg>

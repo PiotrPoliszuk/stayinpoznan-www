@@ -41,18 +41,36 @@ No one can honestly guarantee position 1 for broad accommodation queries dominat
 
 Code alone will not win local search. The launch checklist also needs:
 
-- a verified Google Business Profile with consistent name, address and phone;
-- Google Search Console and Bing Webmaster Tools;
+- a verified Google Search Console domain property and the submitted `sitemap.xml`;
+- Bing Webmaster Tools, preferably imported from Search Console;
+- Google Vacation Rentals / Hotel Center integration only if Stay in Poznań becomes eligible; do not create a Google Business Profile for the apartments themselves, because vacation rentals are not eligible properties under the Business Profile rules;
 - direct links from Airbnb/Booking host profiles where allowed;
 - citations from local tourism, event and business directories;
 - original guest reviews and current photos;
 - useful partnerships/backlinks from Poznań guides and event communities;
 - regular monitoring of impressions, clicks, queries and Core Web Vitals.
 
+## Landing-page coverage after launch
+
+The site contains 23 indexable URLs: 20 Polish pages and 3 English pages. This is enough to establish the site without manufacturing near-duplicate keyword pages. The home page and apartment hub already cover the broad `apartament Poznań`, `nocleg Poznań centrum` and `Stary Rynek` cluster, so pages that differ only by replacing `apartament` with `mieszkanie` or `nocleg` should not be added.
+
+The next distinct intent pages, in priority order, are:
+
+1. `/poznan/mtp/` — an evergreen guide to accommodation for MTP fairs and events, linking to every confirmed event page;
+2. `/poznan/weganskie-restauracje/` — published host-curated guide, verified on 2026-08-20 and intentionally limited to active venues;
+3. `/poznan/clubbing/` — published editorial guide to active electronic-music venues, with current-source links and a restrained Polinski author entity;
+4. `/poznan/przewodnik/` — published city route with a distinct editorial intent, linking the food, nightlife and Old Town clusters without duplicating the weekend itinerary;
+5. `/poznan/z-dziecmi/` — an honest family guide including the fourth floor and lack of lift;
+6. `/poznan/parking-i-dojazd/` — parking, railway station, airport and public-transport guidance for Old Town guests;
+7. selected English guides only after Search Console shows international demand.
+
+Each new page needs first-hand recommendations, original photos or genuinely useful logistics. Do not publish pages solely to repeat a keyword.
+
 ## 90-day content order
 
 1. Launch the core site and request indexing of the home and two apartment pages.
 2. Publish and internally link the currently confirmed event pages.
-3. Add a genuine restaurant/café guide based on the hosts' own recommendations.
-4. Add the mezzanine only after real photos, capacity and booking data exist.
-5. Review Search Console queries after 28 and 60 days; improve pages already receiving impressions before creating more URLs.
+3. Publish the evergreen MTP landing page; the first genuine restaurant guide is already live at `/poznan/weganskie-restauracje/`.
+4. Add the family and transport guides only with verified, first-hand details.
+5. Add the mezzanine only after real photos, capacity and booking data exist.
+6. Review Search Console queries after 28 and 60 days; improve pages already receiving impressions before creating more URLs.
