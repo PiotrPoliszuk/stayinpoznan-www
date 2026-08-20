@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { apartments, attractions, events, faq, site } from "../content/site.mjs";
+import { apartments, attractions, events, faq, nightlifePlaces, site, veganPlaces } from "../content/site.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const indexedPaths = [];
@@ -83,7 +83,7 @@ function layout({
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#101a24">
   ${preload ? `<link rel="preload" as="image" href="${preload}">` : ""}
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/site.css">
   <script src="/assets/site.js" defer></script>
@@ -94,7 +94,7 @@ function layout({
   <header class="site-header" data-header>
     <div class="nav-wrap wrap">
       <a class="wordmark" href="${isPl ? "/" : "/en/"}" aria-label="Stay in Poznań — ${isPl ? "strona główna" : "home"}">
-        <span class="wordmark-mark" aria-hidden="true">S</span><span>Stay in <i>Poznań</i></span>
+        <img class="wordmark-mark" src="/assets/logo-mark.svg" width="42" height="42" alt="" aria-hidden="true"><span>Stay in <i>Poznań</i></span>
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-toggle><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
       <nav class="site-menu" id="site-menu" aria-label="${isPl ? "Główna nawigacja" : "Main navigation"}" data-menu>
@@ -107,7 +107,7 @@ function layout({
   <main id="main">${body}</main>
   <footer class="site-footer">
     <div class="wrap footer-grid">
-      <div><a class="wordmark wordmark-footer" href="${isPl ? "/" : "/en/"}"><span class="wordmark-mark" aria-hidden="true">S</span><span>Stay in <i>Poznań</i></span></a><p>${isPl ? "Prywatne apartamenty w zabytkowej kamienicy, około 100 metrów od Starego Rynku." : "Independent apartments in a historic townhouse, around 100 metres from the Old Market Square."}</p></div>
+      <div><a class="wordmark wordmark-footer" href="${isPl ? "/" : "/en/"}" aria-label="Stay in Poznań"><img class="wordmark-mark" src="/assets/logo-mark.svg" width="42" height="42" alt="" aria-hidden="true"><span>Stay in <i>Poznań</i></span></a><p>${isPl ? "Prywatne apartamenty w zabytkowej kamienicy, około 100 metrów od Starego Rynku." : "Independent apartments in a historic townhouse, around 100 metres from the Old Market Square."}</p></div>
       <div><h2>${isPl ? "Odkrywaj" : "Explore"}</h2><a href="${isPl ? "/apartamenty/" : "/en/#apartments"}">${isPl ? "Apartamenty" : "Apartments"}</a><a href="/poznan/">Poznań</a><a href="/wydarzenia/">${isPl ? "Wydarzenia" : "Events"}</a><a href="/faq/">FAQ</a></div>
       <div><h2>${isPl ? "Kontakt" : "Contact"}</h2><a href="mailto:${site.email}">${site.email}</a><p>${site.address}</p><p>${isPl ? "Polski · English · Українська" : "English · Polski · Українська"}</p></div>
     </div>
@@ -148,7 +148,7 @@ const homeSchema = [{
   name: site.name,
   url: site.url,
   email: site.email,
-  logo: absolute("/assets/favicon.svg"),
+  logo: absolute("/assets/logo-mark.svg"),
   address: { "@type": "PostalAddress", streetAddress: "Wielka 23", addressLocality: "Poznań", addressRegion: "wielkopolskie", addressCountry: "PL" },
 }];
 
@@ -287,10 +287,10 @@ function eventPage(event) {
 
 function poznanHubPage() {
   const path = "/poznan/";
-  const title = "Poznań — atrakcje, Stary Rynek i lokalny przewodnik";
-  const description = "Co zobaczyć w Poznaniu? Lokalny przewodnik Stay in Poznań: Stary Rynek, atrakcje, plan weekendu, wydarzenia i praktyczne wskazówki z Wielkiej 23.";
+  const title = "Poznań po naszemu — przewodniki, jedzenie i nocne życie";
+  const description = "Autorskie przewodniki Stay in Poznań: Stary Rynek, ambitna trasa po mieście, wegańskie restauracje, klubing, wydarzenia i praktyczne wskazówki.";
   const body = `${breadcrumbs([{ name: "Strona główna", path: "/" }, { name: "Poznań", path }])}<section class="page-hero wrap"><p class="eyebrow">Miasto po naszemu</p><h1>Poznań od środka.<br><em>Nie z listy „top 10”.</em></h1><p class="lead">Mieszkamy tu, przyjmujemy gości i wiemy, że dobry weekend to nie wyścig między pinezkami. Zacznij od Rynku, ale zostaw czas na Chwaliszewo, Ostrów Tumski, Cytadelę i zwykłe życie miasta.</p></section>
-  <section class="section wrap guide-cards"><a href="/poznan/stary-rynek/"><span>01</span><p class="eyebrow">Tuż za drzwiami</p><h2>Stary Rynek</h2><p>Ratusz, koziołki, kamienice i nasze sprawdzone wskazówki.</p></a><a href="/poznan/atrakcje/"><span>02</span><p class="eyebrow">Zobacz więcej</p><h2>Atrakcje</h2><p>Klasyki i miejsca, do których naprawdę warto dojść.</p></a><a href="/poznan/weekend/"><span>03</span><p class="eyebrow">Gotowy plan</p><h2>Weekend</h2><p>48 godzin bez gonitwy i bez zbędnych przejazdów.</p></a><a href="/wydarzenia/"><span>04</span><p class="eyebrow">Daty 2026/27</p><h2>Wydarzenia</h2><p>Festiwale, targi, biegi i praktyczny nocleg w centrum.</p></a></section>
+  <section class="section wrap guide-cards"><a href="/poznan/przewodnik/"><span>01</span><p class="eyebrow">Jedna dobra trasa</p><h2>Przewodnik lokalny</h2><p>Miasto ułożone w rytm dnia: Rynek, rzeka, Ostrów Tumski, Cytadela, Jeżyce i noc.</p></a><a href="/poznan/stary-rynek/"><span>02</span><p class="eyebrow">Tuż za drzwiami</p><h2>Stary Rynek</h2><p>Ratusz, koziołki, kamienice i nasze sprawdzone wskazówki.</p></a><a href="/poznan/atrakcje/"><span>03</span><p class="eyebrow">Zobacz więcej</p><h2>Atrakcje</h2><p>Klasyki i miejsca, do których naprawdę warto dojść.</p></a><a href="/poznan/weekend/"><span>04</span><p class="eyebrow">Gotowy plan</p><h2>Weekend</h2><p>48 godzin bez gonitwy i bez zbędnych przejazdów.</p></a><a href="/poznan/weganskie-restauracje/"><span>05</span><p class="eyebrow">Przewodnik gospodarza</p><h2>Wegański Poznań</h2><p>Aktualna selekcja roślinnych miejsc, w tym ważna uwaga o fryturze w Talerzykach.</p></a><a href="/poznan/clubbing/"><span>06</span><p class="eyebrow">Po zmroku · Polinski selects</p><h2>Clubbing</h2><p>Schron, TAMA, House Szkolna, LAB i letnie miejscówki nad Wartą.</p></a><a class="wide-guide-card" href="/wydarzenia/"><span>07</span><p class="eyebrow">Daty 2026/27</p><h2>Wydarzenia</h2><p>Festiwale, targi, biegi i praktyczny nocleg w centrum.</p></a></section>
   <section class="location-section"><div class="wrap location-grid"><div class="location-visual"><img src="/assets/images/koziolki/06-view.webp" width="1032" height="2184" loading="lazy" alt="Widok z Wielkiej 23 na ulicę i dachy Starego Miasta"><span>Widok z Wielkiej 23</span></div><div class="location-copy"><p class="eyebrow">Punkt startowy</p><h2>Wielka 23 to dobry środek ciężkości.</h2><p>Rano jesteś na Rynku, potem przechodzisz przez Chwaliszewo na Ostrów Tumski, wracasz wzdłuż Warty, a wieczorem nie sprawdzasz już rozkładu — po prostu idziesz do domu.</p><a class="button button-dark" href="/apartamenty/">Zobacz apartamenty</a></div></div></section>`;
   return layout({ title, description, path, body, pageClass: "guide-page", schema: [breadcrumbSchema([{ name: "Strona główna", path: "/" }, { name: "Poznań", path }])] });
 }
@@ -309,6 +309,90 @@ function guidePage(kind) {
   const body = `${breadcrumbs(crumbs)}<article><header class="guide-hero wrap"><div><p class="eyebrow">${page.eyebrow}</p><h1>${page.heading}</h1><p class="lead">${page.intro}</p></div><img src="${page.image}" width="1448" height="1086" alt="${page.imageAlt}"></header><section class="section wrap article-grid"><div class="article-main">${page.sections.map(([heading, text], index) => `<section><p class="chapter-number">${String(index + 1).padStart(2, "0")}</p><h2>${heading}</h2><p>${text}</p></section>`).join("")}</div><aside class="article-aside sticky"><p class="eyebrow">Baza spaceru</p><h2>Wielka 23</h2><p>Około 100 m od Starego Rynku. Dwa prywatne apartamenty dla maks. 4 osób.</p><a class="button button-dark" href="/apartamenty/">Zobacz apartamenty</a></aside></section></article>`;
   const articleSchema = { "@type": "Article", headline: page.title, description: page.description, datePublished: site.modified, dateModified: site.modified, author: { "@type": "Organization", name: site.name }, image: absolute(page.image), mainEntityOfPage: absolute(page.path) };
   return layout({ title: page.title, description: page.description, path: page.path, body, pageClass: "guide-detail-page", image: page.image, schema: [articleSchema, breadcrumbSchema(crumbs)] });
+}
+
+function veganGuidePage() {
+  const path = "/poznan/weganskie-restauracje/";
+  const title = "Wegańskie restauracje Poznań — przewodnik gospodarza 2026";
+  const description = "Aktualna selekcja wegańskich restauracji w Poznaniu: centrum, Jeżyce i Łazarz. Sprawdzone adresy, dojazd ze Starego Rynku i praktyczne uwagi.";
+  const crumbs = [{ name: "Strona główna", path: "/" }, { name: "Poznań", path: "/poznan/" }, { name: "Wegańskie restauracje", path }];
+  const veganFaq = [
+    ["Gdzie zjeść wegańsko blisko Starego Rynku w Poznaniu?", "Ze Stay in Poznań najłatwiej dojść przez centrum do Buły z Musztardą lub Sorrir. Najciekawsze w pełni roślinne restauracje są też na Jeżycach i Łazarzu, dokąd wygodnie dojedziesz tramwajem."],
+    ["Które miejsca z listy są w pełni wegańskie?", "Buła z Musztardą, Kuchnia PoWolność, WYPAS, Owca Cała i La Papaya deklarują profil w pełni roślinny lub wegański. Menu i zasady lokalu mogą się zmieniać, dlatego przy alergiach zawsze potwierdź skład na miejscu."],
+    ["Czy Talerzyki są restauracją wegańską?", "Nie. Talerzyki to lokal wegetariański z opcjami wegańskimi. Według informacji uzyskanej przez gospodarzy jedna frytura jest używana do pozycji wegetariańskich i wegańskich, w tym falafela."],
+    ["Czy godziny otwarcia są zawsze aktualne?", "Nie obiecujemy stałych godzin, bo restauracje zmieniają je sezonowo. Listę zweryfikowaliśmy 20 sierpnia 2026 r.; przed wyjściem otwórz link do lokalu i sprawdź bieżące menu oraz godziny."],
+  ];
+  const cards = veganPlaces.map((place, index) => `<article class="vegan-place-card reveal">
+    <div class="vegan-place-top"><span class="place-number">${String(index + 1).padStart(2, "0")}</span><span class="place-type">${escapeHtml(place.type)}</span></div>
+    <p class="eyebrow">${escapeHtml(place.area)} · ${escapeHtml(place.route)}</p>
+    <h2>${escapeHtml(place.name)}</h2>
+    <p class="place-address">${escapeHtml(place.address)} · ${escapeHtml(place.bestFor)}</p>
+    <p>${escapeHtml(place.description)}</p>
+    ${place.warning ? `<aside class="vegan-warning"><strong>Uwaga praktyczna</strong><p>${escapeHtml(place.warning)}</p></aside>` : ""}
+    <a class="text-link" href="${place.sourceUrl}" rel="noopener noreferrer">Sprawdź bieżące menu i godziny <span aria-hidden="true">↗</span></a>
+  </article>`).join("");
+  const body = `${breadcrumbs(crumbs)}<article><header class="guide-hero vegan-guide-hero wrap"><div><p class="eyebrow">Wegański przewodnik gospodarza · aktualizacja 20.08.2026</p><h1>Roślinny Poznań.<br><em>Bez przypadkowej listy z Google.</em></h1><p class="lead">Piotr je wegańsko, dlatego wybraliśmy krótko: miejsca o wyraźnym roślinnym charakterze, do których sami wysłalibyśmy gości. Ścisły Stary Rynek ma sporo pojedynczych opcji, ale po najlepszą wegańską kuchnię warto czasem przejść się przez centrum albo podjechać na Jeżyce i Łazarz.</p></div><img src="/assets/images/koziolki/06-view.webp" width="1032" height="2184" alt="Widok z apartamentu Stay in Poznań na dachy Starego Miasta"></header>
+  <section class="section wrap vegan-guide-intro"><div class="section-heading"><div><p class="eyebrow">Nasza aktualna siódemka</p><h2>Od burgera po spokojną kolację</h2></div><p>Nie oznaczamy lokalu jako w pełni wegański, jeśli ma również nabiał lub jajka. Przy alergiach, celiakii i ścisłym unikaniu kontaktu krzyżowego zawsze porozmawiaj z obsługą.</p></div><div class="vegan-places-grid">${cards}</div></section>
+  <section class="editorial-note vegan-editorial"><div class="wrap"><p class="eyebrow">Dlaczego nie ma tu 30 adresów?</p><h2>Aktualność jest ważniejsza niż długość listy.</h2><p>W czasie sprawdzania odrzuciliśmy miejsca zamknięte, czasowo nieczynne albo takie, których bieżącego działania nie dało się rozsądnie potwierdzić. Restauracje zmieniają menu i godziny — dlatego przy każdym adresie zostawiamy link do aktualnego źródła.</p></div></section>
+  <section class="section wrap faq-section"><div class="section-heading"><div><p class="eyebrow">Wegański Poznań w praktyce</p><h2>Najczęstsze pytania</h2></div></div>${faqList(veganFaq)}</section>
+  <section class="final-cta"><div class="wrap"><p class="eyebrow">Baza przy Starym Rynku</p><h2>Własna kuchnia na górze. Cały Poznań za drzwiami.</h2><p>Oba apartamenty mają wyposażoną kuchnię, więc śniadanie lub późną kolację możesz przygotować dokładnie po swojemu.</p><a class="button button-light" href="/apartamenty/">Zobacz apartamenty</a></div></section></article>`;
+  const articleSchema = { "@type": "Article", headline: title, description, datePublished: site.modified, dateModified: site.modified, author: { "@type": "Organization", name: site.name, url: site.url }, image: absolute("/assets/images/koziolki/06-view.webp"), mainEntityOfPage: absolute(path) };
+  const listSchema = { "@type": "ItemList", name: "Polecane wegańskie restauracje w Poznaniu", itemListElement: veganPlaces.map((place, index) => ({ "@type": "ListItem", position: index + 1, name: place.name, url: place.sourceUrl })) };
+  const faqSchema = { "@type": "FAQPage", mainEntity: veganFaq.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) };
+  return layout({ title, description, path, body, pageClass: "guide-detail-page vegan-guide-page", image: "/assets/images/koziolki/06-view.webp", schema: [articleSchema, listSchema, faqSchema, breadcrumbSchema(crumbs)] });
+}
+
+function nightlifeGuidePage() {
+  const path = "/poznan/clubbing/";
+  const title = "Clubbing Poznań — Schron, TAMA, House Szkolna i elektronika";
+  const description = "Autorski przewodnik po klubach i muzyce elektronicznej w Poznaniu: SCHRON, TAMA, House Szkolna, Projekt LAB, KontenerART i Nurt.";
+  const crumbs = [{ name: "Strona główna", path: "/" }, { name: "Poznań", path: "/poznan/" }, { name: "Clubbing", path }];
+  const nightFaq = [
+    ["Gdzie iść na techno w Poznaniu?", "Na surowszą, podziemną noc sprawdź program SCHRONU. TAMA wybiera większy format, mocną produkcję i rozpoznawalne nazwiska. W obu przypadkach o charakterze nocy decyduje konkretny lineup."],
+    ["Który klub jest najbliżej Starego Rynku?", "House Szkolna przy Szkolnej 17 leży w ścisłym centrum i nadaje się na spontaniczne wyjście. Do pozostałych miejsc najwygodniej dojść, podjechać tramwajem albo zamówić przejazd."],
+    ["Gdzie sprawdzać aktualne imprezy elektroniczne w Poznaniu?", "Najpierw sprawdź oficjalne kanały klubów, a następnie kalendarz Resident Advisor i profile konkretnych kolektywów. Program zmienia się z tygodnia na tydzień."],
+    ["Czy KontenerART i Nurt są klubami?", "Nie w klasycznym sensie. To sezonowe miejsca nad Wartą: dobre na zachód słońca, koncert, DJ set i rozpoczęcie wieczoru, ale zależne od pogody oraz bieżącego programu."],
+  ];
+  const cards = nightlifePlaces.map((place, index) => `<article class="night-venue reveal">
+    <div class="night-venue-index">${String(index + 1).padStart(2, "0")}</div>
+    <div class="night-venue-copy"><p class="night-meta">${escapeHtml(place.scale)}</p><h2>${escapeHtml(place.name)}</h2><p class="night-address">${escapeHtml(place.address)}</p><p>${escapeHtml(place.description)}</p><p class="night-sound">${escapeHtml(place.sound)}</p><aside><strong>Polinski mówi:</strong> ${escapeHtml(place.tip)}</aside><a href="${place.sourceUrl}" rel="noopener noreferrer">Sprawdź aktualny program <span aria-hidden="true">↗</span></a></div>
+  </article>`).join("");
+  const body = `${breadcrumbs(crumbs)}<article class="night-experience"><header class="night-hero"><div class="night-grid" aria-hidden="true"></div><div class="wrap night-hero-inner"><div><p class="night-kicker">Poznań after dark · updated 20.08.2026</p><h1>Trochę młodszy.<br>Trochę czystszy.<br><em>Berlin po poznańsku.</em></h1><p>Miasto jest kompaktowe, scena nie musi niczego udowadniać, a dobra noc może zacząć się nad Wartą i skończyć w bunkrze. Nie wybieraj klubu po szyldzie. Wybierz lineup.</p></div><div class="night-orbit" aria-hidden="true"><span>SCHRON</span><span>TAMA</span><span>HOUSE</span><i></i></div></div></header>
+  <div class="night-ticker" aria-hidden="true"><span>SCHRON · TAMA · HOUSE SZKOLNA · PROJEKT LAB · KONTENERART · NURT · POLINSKI SELECTS · </span></div>
+  <section class="night-intro wrap"><p class="night-label">01 / wybierz skalę</p><div><h2>Jedno miasto.<br>Sześć różnych nocy.</h2><p>Ta lista nie jest rankingiem. Duży headliner, surowy underground, mały dancefloor i letni DJ set służą zupełnie innym wieczorom.</p></div></section>
+  <section class="wrap night-venues">${cards}</section>
+  <section class="polinski-section"><div class="wrap polinski-grid"><p class="night-label">02 / selekcja</p><div><p class="polinski-sign">POLINSKI</p><h2>Gatunek jest narzędziem.<br>Liczy się przebieg nocy.</h2><p>Ten przewodnik układa Polinski — DJ grający od 2003 roku, dziś od czasu do czasu pojawiający się za konsoletą w Poznaniu, między innymi w KontenerART. Najbliżej mu do house'u, minimalu, breaków i techno z hipnotycznym groovem. Bez pompowania biografii: po prostu wie, że dobry klub zaczyna się od właściwej selekcji.</p></div><div class="polinski-stats"><span><strong>2003</strong>pierwsze sety</span><span><strong>4</strong>naturalne kierunki</span><span><strong>1</strong>zasada: sprawdź lineup</span></div></div></section>
+  <section class="night-plan wrap"><p class="night-label">03 / ułóż noc</p><div class="night-plan-grid"><article><span>19:00</span><h3>Rzeka</h3><p>KontenerART albo Nurt. Zachód słońca, jedzenie, pierwszy set.</p></article><article><span>23:00</span><h3>Wybór</h3><p>House Szkolna na spontanicznie. SCHRON, TAMA lub LAB pod konkretny program.</p></article><article><span>rano</span><h3>Powrót</h3><p>Nie komplikuj. Sprawdź nocną komunikację lub zamów przejazd pod Wielką 23.</p></article></div></section>
+  <section class="night-faq wrap"><p class="night-label">04 / praktycznie</p><div><h2>Zanim zgaśnie ekran</h2>${faqList(nightFaq)}</div></section>
+  <section class="night-home"><div class="wrap"><p class="night-label">05 / reset</p><h2>Po nocy wracasz do własnego mieszkania.</h2><p>Nie obiecujemy ciszy miasta. Obiecujemy klimatyzację, własną kuchnię i adres w centrum, z którego nie trzeba robić wyprawy.</p><a class="button button-light" href="/apartamenty/">Zobacz apartamenty</a></div></section></article>`;
+  const author = { "@type": "Person", name: "Polinski", description: "DJ aktywny od 2003 roku, związany z muzyką house, minimal, breakbeat i techno." };
+  const articleSchema = { "@type": "Article", headline: title, description, datePublished: site.modified, dateModified: site.modified, author, publisher: { "@type": "Organization", name: site.name, url: site.url }, image: absolute("/assets/images/brand/og-stayinpoznan.webp"), mainEntityOfPage: absolute(path) };
+  const listSchema = { "@type": "ItemList", name: "Kluby i miejsca z muzyką elektroniczną w Poznaniu", itemListElement: nightlifePlaces.map((place, index) => ({ "@type": "ListItem", position: index + 1, name: place.name, url: place.sourceUrl })) };
+  const faqSchema = { "@type": "FAQPage", mainEntity: nightFaq.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) };
+  return layout({ title, description, path, body, pageClass: "nightlife-page", schema: [articleSchema, listSchema, faqSchema, breadcrumbSchema(crumbs)] });
+}
+
+function localGuidePage() {
+  const path = "/poznan/przewodnik/";
+  const title = "Przewodnik po Poznaniu 2026 — ambitna trasa bez pośpiechu";
+  const description = "Prosty i ambitny przewodnik po Poznaniu: Stary Rynek, Chwaliszewo, Ostrów Tumski, Warta, Cytadela, Jeżyce, jedzenie i nocne życie.";
+  const crumbs = [{ name: "Strona główna", path: "/" }, { name: "Poznań", path: "/poznan/" }, { name: "Przewodnik lokalny", path }];
+  const route = [
+    ["08:00", "Stary Rynek przed miastem", "Wyjdź wcześnie. Zobacz Ratusz i domki budnicze bez tłumu, wypij kawę dwie ulice dalej i wróć na koziołki dopiero w południe.", "Wielka 23 → Ratusz"],
+    ["11:00", "Chwaliszewo i rzeka", "Zamiast zawracać przez centrum, idź w stronę Warty. Chwaliszewo jest łącznikiem między pocztówkowym Poznaniem a miastem, które żyje nad rzeką.", "Ratusz → Chwaliszewo"],
+    ["13:00", "Ostrów Tumski bez szkolnej wycieczki", "Zobacz katedrę, ale daj więcej czasu Bramie Poznania i samej wyspie. To tutaj historia kraju ma przestrzeń, a nie tylko podpis pod zabytkiem.", "Chwaliszewo → Ostrów Tumski"],
+    ["16:00", "Cytadela albo Jeżyce", "Przy dobrej pogodzie wybierz park i długi spacer. Jeśli chcesz miejskiego życia, jedź na Jeżyce: jedzenie, małe lokale, rynek i ulice, które nie są scenografią.", "Wybierz jeden kierunek"],
+    ["20:00", "Kolacja, rzeka, muzyka", "Nie wracaj od razu na turystyczny Rynek. Zjedz roślinnie, sprawdź letni program nad Wartą albo wybierz klub po line-upie, nie po reklamie.", "Jedzenie → noc → Wielka 23"],
+  ];
+  const routeHtml = route.map(([time, name, text, line], index) => `<article class="city-stop reveal"><div class="city-stop-marker"><span>${String(index + 1).padStart(2, "0")}</span><i></i></div><div><p class="city-time">${time} · ${line}</p><h2>${name}</h2><p>${text}</p></div></article>`).join("");
+  const body = `${breadcrumbs(crumbs)}<article class="city-experience"><header class="city-hero"><div class="wrap city-hero-grid"><div><p class="city-kicker">Poznań / instrukcja obsługi / 2026</p><h1>Nie zwiedzaj miasta.<br><em>Wejdź w jego rytm.</em></h1><p class="lead">Jedna dobra oś zamiast trzydziestu pinezek: rano Stary Rynek, potem rzeka i Ostrów Tumski, po południu zieleń albo Jeżyce, wieczorem jedzenie i muzyka.</p></div><div class="city-map" aria-hidden="true"><span class="map-point p1">Wielka 23</span><span class="map-point p2">Warta</span><span class="map-point p3">Ostrów</span><span class="map-point p4">Cytadela</span><span class="map-point p5">Jeżyce</span><svg viewBox="0 0 360 430"><path d="M68 342C92 285 155 304 172 245s-42-72-9-118 92-13 118-67"/><path d="M68 342c82 20 173 22 222-48"/></svg></div></div></header>
+  <section class="city-manifesto"><div class="wrap"><p>POZNAŃ NIE POTRZEBUJE WIĘCEJ „TOP 10”. POTRZEBUJE DOBREJ KOLEJNOŚCI.</p></div></section>
+  <section class="wrap city-route"><div class="city-route-head"><p class="city-kicker">Trasa / jeden pełny dzień</p><h2>Pięć ruchów przez miasto</h2></div>${routeHtml}</section>
+  <section class="city-choices"><div class="wrap city-choices-grid"><div><p class="city-kicker">Wybierz dobrze</p><h2>Zostaw coś na następny raz.</h2></div><div class="city-choice-card keep"><span>Zrób</span><ul><li>Rynek przed 9:00</li><li>Wartę pieszo</li><li>jedną dzielnicę naprawdę</li><li>miejsce wybrane po programie</li></ul></div><div class="city-choice-card skip"><span>Odpuść</span><ul><li>pięć muzeów jednego dnia</li><li>obiad na pierwszym wolnym ogródku</li><li>jazdę autem po centrum</li><li>gonienie każdej atrakcji</li></ul></div></div></section>
+  <section class="city-portals wrap"><a href="/poznan/weganskie-restauracje/"><span>01 / jedzenie</span><h2>Roślinny Poznań</h2><p>Siedem aktualnych adresów i uczciwe informacje, gdzie kończy się „vegan friendly”.</p></a><a href="/poznan/clubbing/"><span>02 / po zmroku</span><h2>Clubbing</h2><p>Schron, TAMA, Szkolna, LAB i letnie miejscówki wybrane przez Polinskiego.</p></a><a href="/poznan/stary-rynek/"><span>03 / blisko</span><h2>Stary Rynek</h2><p>To, co warto zobaczyć tuż za drzwiami — bez dorabiania legendy.</p></a></section>
+  <section class="city-last-word"><div class="wrap"><p class="city-kicker">Baza / Wielka 23</p><h2>Najlepszy luksus w city breaku?<br>Nie tracić czasu na dojazdy.</h2><a class="button button-dark" href="/apartamenty/">Wybierz apartament</a></div></section></article>`;
+  const articleSchema = { "@type": "Article", headline: title, description, datePublished: site.modified, dateModified: site.modified, author: { "@type": "Organization", name: site.name, url: site.url }, image: absolute("/assets/images/koziolki/07-view.webp"), mainEntityOfPage: absolute(path) };
+  return layout({ title, description, path, body, pageClass: "city-guide-page", image: "/assets/images/koziolki/07-view.webp", schema: [articleSchema, breadcrumbSchema(crumbs)] });
 }
 
 function faqPage() {
@@ -332,6 +416,9 @@ await writePage("/wydarzenia/", eventsHubPage());
 for (const event of events) await writePage(`/wydarzenia/${event.slug}/`, eventPage(event));
 await writePage("/poznan/", poznanHubPage());
 for (const kind of ["stary-rynek", "atrakcje", "weekend"]) await writePage(`/poznan/${kind}/`, guidePage(kind));
+await writePage("/poznan/przewodnik/", localGuidePage());
+await writePage("/poznan/weganskie-restauracje/", veganGuidePage());
+await writePage("/poznan/clubbing/", nightlifeGuidePage());
 await writePage("/faq/", faqPage());
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexedPaths.map((path) => `  <url><loc>${absolute(path)}</loc><lastmod>${site.modified}</lastmod></url>`).join("\n")}\n</urlset>\n`;

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Stay in Poznań</title>
+  <desc id="logo-desc">Minimalistyczny sygnet domu z dwoma poznańskimi koziołkami</desc>
+
+  <!-- One strong architectural gesture: a Poznań townhouse, open at the base. -->
+  <path d="M8 55V28L32 7l24 21v27" fill="none" stroke="#d5a65a" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.4"/>
+
+  <!-- Two mirrored goats. Their horns echo the roof and meet in the middle. -->
+  <g fill="#fffdf8">
+    <path d="M13 33.5c3.8-5.7 10.8-7.7 16.1-3.7L32 32l-4.4 5.4c-2.9 3.5-8 3.7-11.1.4L13 34.2l6.1-.4c1.6-.1 3.2.2 4.6.9-1.2-1.3-2.8-2.1-4.6-2.2L13 33.5Z"/>
+    <path d="M51 33.5c-3.8-5.7-10.8-7.7-16.1-3.7L32 32l4.4 5.4c2.9 3.5 8 3.7 11.1.4l3.5-3.6-6.1-.4c-1.6-.1-3.2.2-4.6.9 1.2-1.3 2.8-2.1 4.6-2.2l6.1 1Z"/>
+  </g>
+  <g fill="none" stroke="#fffdf8" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    <path d="M27.1 28.7c-6.3-.8-9.7-5.7-7.5-11.2.8 4 3.8 6.4 8.8 6.7"/>
+    <path d="M36.9 28.7c6.3-.8 9.7-5.7 7.5-11.2-.8 4-3.8 6.4-8.8 6.7"/>
+  </g>
+
+  <!-- A single threshold grounds the mark without adding illustrative detail. -->
+  <path d="M20 55h24" fill="none" stroke="#d5a65a" stroke-linecap="round" stroke-width="4.4"/>
+</svg>
