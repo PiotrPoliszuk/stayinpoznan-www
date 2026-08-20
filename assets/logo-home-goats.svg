@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 64" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Stay in Poznań</title>
+  <desc id="logo-desc">Domek z dwoma poznańskimi koziołkami</desc>
+  <path d="M7 58V27L40 5l33 22v31" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+  <path d="M7 58h66" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
+  <g fill="#fff">
+    <path d="M13 34c2-4 7-6 13-5l4 2 2-6c1-3 4-5 7-5h2l4 4-5 4h-4l-3 7-1 15h-4l-1-11h-7l-2 11h-4l-1-13-4-2 3-4 1 3Z"/>
+    <path d="M67 34c-2-4-7-6-13-5l-4 2-2-6c-1-3-4-5-7-5h-2l-4 4 5 4h4l3 7 1 15h4l1-11h7l2 11h4l1-13 4-2-3-4-1 3Z"/>
+  </g>
+  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.2">
+    <path d="M37 22c-1-5-5-7-9-5 3 .2 5 2 6 6"/>
+    <path d="M43 22c1-5 5-7 9-5-3 .2-5 2-6 6"/>
+  </g>
+</svg>

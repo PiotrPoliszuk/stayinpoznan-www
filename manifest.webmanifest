@@ -5,5 +5,5 @@
   "display": "standalone",
   "background_color": "#f4f0e8",
   "theme_color": "#101a24",
-  "icons": [{ "src": "/assets/favicon-ratusz.svg", "sizes": "any", "type": "image/svg+xml" }]
+  "icons": [{ "src": "/assets/favicon-home-goats.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

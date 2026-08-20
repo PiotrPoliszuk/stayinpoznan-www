@@ -83,9 +83,9 @@ function layout({
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#101a24">
   ${preload ? `<link rel="preload" as="image" href="${preload}">` : ""}
-  <link rel="icon" href="/assets/favicon-ratusz.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon-home-goats.svg" type="image/svg+xml">
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="stylesheet" href="/assets/site.css?v=ratusz-20260820">
+  <link rel="stylesheet" href="/assets/site.css?v=home-goats-20260821">
   <script src="/assets/site.js" defer></script>
   ${graph}
 </head>
@@ -94,7 +94,7 @@ function layout({
   <header class="site-header" data-header>
     <div class="nav-wrap wrap">
       <a class="wordmark" href="${isPl ? "/" : "/en/"}" aria-label="Stay in Poznań — ${isPl ? "strona główna" : "home"}">
-        <img class="wordmark-mark" src="/assets/logo-ratusz.svg" width="46" height="46" alt="" aria-hidden="true"><span class="wordmark-copy"><span>Stay in</span><strong>Poznań</strong></span>
+        <img class="wordmark-mark" src="/assets/logo-home-goats.svg" width="55" height="44" alt="" aria-hidden="true"><span class="wordmark-copy"><span>Stay in</span><strong>Poznań</strong></span>
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-toggle><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
       <nav class="site-menu" id="site-menu" aria-label="${isPl ? "Główna nawigacja" : "Main navigation"}" data-menu>
@@ -107,7 +107,7 @@ function layout({
   <main id="main">${body}</main>
   <footer class="site-footer">
     <div class="wrap footer-grid">
-      <div><a class="wordmark wordmark-footer" href="${isPl ? "/" : "/en/"}" aria-label="Stay in Poznań"><img class="wordmark-mark" src="/assets/logo-ratusz.svg" width="46" height="46" alt="" aria-hidden="true"><span class="wordmark-copy"><span>Stay in</span><strong>Poznań</strong></span></a><p>${isPl ? "Prywatne apartamenty w zabytkowej kamienicy, około 100 metrów od Starego Rynku." : "Independent apartments in a historic townhouse, around 100 metres from the Old Market Square."}</p></div>
+      <div><a class="wordmark wordmark-footer" href="${isPl ? "/" : "/en/"}" aria-label="Stay in Poznań"><img class="wordmark-mark" src="/assets/logo-home-goats.svg" width="55" height="44" alt="" aria-hidden="true"><span class="wordmark-copy"><span>Stay in</span><strong>Poznań</strong></span></a><p>${isPl ? "Prywatne apartamenty w zabytkowej kamienicy, około 100 metrów od Starego Rynku." : "Independent apartments in a historic townhouse, around 100 metres from the Old Market Square."}</p></div>
       <div><h2>${isPl ? "Odkrywaj" : "Explore"}</h2><a href="${isPl ? "/apartamenty/" : "/en/#apartments"}">${isPl ? "Apartamenty" : "Apartments"}</a><a href="/poznan/">Poznań</a><a href="/wydarzenia/">${isPl ? "Wydarzenia" : "Events"}</a><a href="/faq/">FAQ</a></div>
       <div><h2>${isPl ? "Kontakt" : "Contact"}</h2><a href="mailto:${site.email}">${site.email}</a><p>${site.address}</p><p>${isPl ? "Polski · English · Українська" : "English · Polski · Українська"}</p></div>
     </div>
@@ -148,7 +148,7 @@ const homeSchema = [{
   name: site.name,
   url: site.url,
   email: site.email,
-  logo: absolute("/assets/favicon-ratusz.svg"),
+  logo: absolute("/assets/favicon-home-goats.svg"),
   address: { "@type": "PostalAddress", streetAddress: "Wielka 23", addressLocality: "Poznań", addressRegion: "wielkopolskie", addressCountry: "PL" },
 }];
 
