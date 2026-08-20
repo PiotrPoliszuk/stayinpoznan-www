@@ -29,6 +29,7 @@ const files = await walk(root);
 const htmlFiles = files.filter((file) => extname(file) === ".html");
 const titles = new Map();
 const canonicals = new Map();
+const indexableCanonicals = new Set();
 
 for (const file of htmlFiles) {
   const name = relative(root, file);
@@ -36,6 +37,7 @@ for (const file of htmlFiles) {
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1]?.trim();
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/i)?.[1]?.trim();
+  const isNoindex = /<meta name="robots" content="[^"]*noindex/i.test(html);
   const h1Count = (html.match(/<h1\b/gi) || []).length;
 
   if (!title || title.length < 12) errors.push(`${name}: missing or short title`);
@@ -50,6 +52,7 @@ for (const file of htmlFiles) {
   if (canonical) {
     if (canonicals.has(canonical)) errors.push(`${name}: duplicate canonical also used by ${canonicals.get(canonical)}`);
     canonicals.set(canonical, name);
+    if (!isNoindex) indexableCanonicals.add(canonical);
   }
 
   for (const script of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) {
@@ -87,7 +90,13 @@ for (const file of htmlFiles) {
 
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 if (sitemap.includes("/apartamenty/antresola/")) errors.push("sitemap.xml: noindex antresola page must not be listed");
-if ((sitemap.match(/<url>/g) || []).length !== 23) errors.push("sitemap.xml: expected 23 indexable URLs");
+const sitemapUrls = new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]));
+if (sitemapUrls.size !== indexableCanonicals.size) {
+  errors.push(`sitemap.xml: expected ${indexableCanonicals.size} indexable URLs, found ${sitemapUrls.size}`);
+}
+for (const canonical of indexableCanonicals) {
+  if (!sitemapUrls.has(canonical)) errors.push(`sitemap.xml: missing ${canonical}`);
+}
 
 const redirects = await readFile(join(root, "_redirects"), "utf8");
 for (const [alias, target] of [
@@ -100,6 +109,10 @@ for (const [alias, target] of [
   ["/clubbing", "/poznan/clubbing/"],
   ["/kluby", "/poznan/clubbing/"],
   ["/przewodnik", "/poznan/przewodnik/"],
+  ["/legendy", "/poznan/nieoczywisty/"],
+  ["/cytadela", "/poznan/historia/cytadela-fort-winiary/"],
+  ["/lotnictwo", "/poznan/historia/lawica-polskie-lotnictwo/"],
+  ["/ukraina", "/ua/"],
 ]) {
   if (!redirects.includes(`${alias} ${target} 301`)) errors.push(`_redirects: missing campaign alias ${alias}`);
   if (!await exists(join(root, target, "index.html"))) errors.push(`_redirects: missing target ${target}`);
