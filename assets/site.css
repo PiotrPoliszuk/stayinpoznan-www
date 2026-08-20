@@ -53,8 +53,9 @@
   .nav-wrap { justify-content: space-between; }
   .wordmark { align-items: center; color: var(--white); display: inline-flex; gap: 13px; text-decoration: none; }
   .wordmark-mark { display: block; flex: 0 0 auto; height: 46px; transition: height .3s, width .3s; width: 46px; }
-  .wordmark-copy { align-items: baseline; display: inline-flex; font-family: var(--sans); font-size: .76rem; font-weight: 590; gap: .55em; letter-spacing: .135em; line-height: 1; text-transform: uppercase; white-space: nowrap; }
-  .wordmark-copy strong { font-weight: 850; letter-spacing: .105em; }
+  .wordmark-copy { align-items: flex-start; display: inline-flex; flex-direction: column; font-family: var(--sans); gap: 5px; line-height: .8; text-transform: uppercase; white-space: nowrap; }
+  .wordmark-copy > span { font-size: .59rem; font-weight: 650; letter-spacing: .24em; padding-left: .12em; }
+  .wordmark-copy strong { font-size: .94rem; font-weight: 850; letter-spacing: .075em; }
   .site-header.is-sticky .wordmark-mark { height: 40px; width: 40px; }
   .site-menu { gap: 28px; }
   .site-menu > a { font-size: .78rem; font-weight: 720; letter-spacing: .06em; text-decoration: none; }
