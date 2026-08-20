@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 72" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Stay in Poznań</title>
+  <desc id="logo-desc">Kamieniczka z dwoma poznańskimi koziołkami</desc>
+  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 63V29L48 6l38 23v34H10Z" stroke-width="4"/>
+    <path d="M38.5 29.5c-5.5-1.5-10.8-5.9-8.4-12.2.9 4.4 4.4 7.4 9.3 7.8" stroke-width="3.5"/>
+    <path d="M57.5 29.5c5.5-1.5 10.8-5.9 8.4-12.2-.9 4.4-4.4 7.4-9.3 7.8" stroke-width="3.5"/>
+  </g>
+  <g fill="#fff">
+    <path d="M48 38.5c-3.6-2-5.8-4.9-6.8-8.3-.8-2.9-3.7-4.9-7-4.6-3.3.3-5.5 2.5-6.2 5.4l-8.1-2.4 5.8 7.2c-.2 5.3 2.2 9.7 6.5 12.4l-1.1 8.3 6-6.2c3.2-2.3 5-5.5 5.4-9.2L48 38.5Z"/>
+    <path d="M48 38.5c3.6-2 5.8-4.9 6.8-8.3.8-2.9 3.7-4.9 7-4.6 3.3.3 5.5 2.5 6.2 5.4l8.1-2.4-5.8 7.2c.2 5.3-2.2 9.7-6.5 12.4l1.1 8.3-6-6.2c-3.2-2.3-5-5.5-5.4-9.2L48 38.5Z"/>
+  </g>
+  <g fill="#0b1822">
+    <circle cx="35" cy="33" r="1.5"/>
+    <circle cx="61" cy="33" r="1.5"/>
+  </g>
+</svg>
