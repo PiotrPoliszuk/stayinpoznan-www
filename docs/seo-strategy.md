@@ -26,6 +26,7 @@ No one can honestly guarantee position 1 for broad accommodation queries dominat
 - LodgingBusiness structured data for Ratusz View until an eighth authentic photo exists;
 - noindex for the unfinished mezzanine apartment;
 - permanent host redirects from `www` and `oldmarketsquare.pl`.
+- campaign aliases on both domains that resolve with HTTP 301 to one canonical landing page.
 
 ## Content rules
 

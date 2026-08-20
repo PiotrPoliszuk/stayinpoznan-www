@@ -1,7 +1,26 @@
 # Cloudflare Pages redirects
+# Campaign routes from oldmarketsquare.pl go directly to their matching landing page.
+https://oldmarketsquare.pl/pyrkon https://stayinpoznan.pl/wydarzenia/pyrkon-2027/ 301
+https://www.oldmarketsquare.pl/pyrkon https://stayinpoznan.pl/wydarzenia/pyrkon-2027/ 301
+https://oldmarketsquare.pl/bittersweet https://stayinpoznan.pl/wydarzenia/bittersweet-festival-2027/ 301
+https://www.oldmarketsquare.pl/bittersweet https://stayinpoznan.pl/wydarzenia/bittersweet-festival-2027/ 301
+https://oldmarketsquare.pl/targi https://stayinpoznan.pl/wydarzenia/ 301
+https://www.oldmarketsquare.pl/targi https://stayinpoznan.pl/wydarzenia/ 301
+https://oldmarketsquare.pl/apartament https://stayinpoznan.pl/apartamenty/ 301
+https://www.oldmarketsquare.pl/apartament https://stayinpoznan.pl/apartamenty/ 301
+https://oldmarketsquare.pl/stary-rynek https://stayinpoznan.pl/poznan/stary-rynek/ 301
+https://www.oldmarketsquare.pl/stary-rynek https://stayinpoznan.pl/poznan/stary-rynek/ 301
+
 https://www.stayinpoznan.pl/* https://stayinpoznan.pl/:splat 301
 http://www.stayinpoznan.pl/* https://stayinpoznan.pl/:splat 301
 https://oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301
 http://oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301
 https://www.oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301
 http://www.oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301
+
+# Short campaign URLs on the primary domain.
+/pyrkon /wydarzenia/pyrkon-2027/ 301
+/bittersweet /wydarzenia/bittersweet-festival-2027/ 301
+/targi /wydarzenia/ 301
+/apartament /apartamenty/ 301
+/stary-rynek /poznan/stary-rynek/ 301

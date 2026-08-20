@@ -24,6 +24,16 @@ node scripts/check-site.mjs
 
 Preferred: attach `oldmarketsquare.pl` and `www.oldmarketsquare.pl` to the same Pages project. The repository `_redirects` file preserves the path and returns HTTP 301 to `stayinpoznan.pl`.
 
+Short campaign URLs map both domains directly to the relevant canonical landing page:
+
+- `/pyrkon` → `/wydarzenia/pyrkon-2027/`
+- `/bittersweet` → `/wydarzenia/bittersweet-festival-2027/`
+- `/targi` → `/wydarzenia/`
+- `/apartament` → `/apartamenty/`
+- `/stary-rynek` → `/poznan/stary-rynek/`
+
+Use those short URLs in printed materials, social profiles and event campaigns. Search engines should index only the final `stayinpoznan.pl` URLs.
+
 Alternative: use a Cloudflare Redirect Rule in the `oldmarketsquare.pl` zone.
 
 DNS needed in `oldmarketsquare.pl` zone:

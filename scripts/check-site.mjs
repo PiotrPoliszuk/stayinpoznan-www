@@ -83,6 +83,19 @@ const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 if (sitemap.includes("/apartamenty/antresola/")) errors.push("sitemap.xml: noindex antresola page must not be listed");
 if ((sitemap.match(/<url>/g) || []).length !== 20) errors.push("sitemap.xml: expected 20 indexable URLs");
 
+const redirects = await readFile(join(root, "_redirects"), "utf8");
+for (const [alias, target] of [
+  ["/pyrkon", "/wydarzenia/pyrkon-2027/"],
+  ["/bittersweet", "/wydarzenia/bittersweet-festival-2027/"],
+  ["/targi", "/wydarzenia/"],
+  ["/apartament", "/apartamenty/"],
+  ["/stary-rynek", "/poznan/stary-rynek/"],
+]) {
+  if (!redirects.includes(`${alias} ${target} 301`)) errors.push(`_redirects: missing campaign alias ${alias}`);
+  if (!await exists(join(root, target, "index.html"))) errors.push(`_redirects: missing target ${target}`);
+}
+if (!redirects.includes("https://oldmarketsquare.pl/* https://stayinpoznan.pl/:splat 301")) errors.push("_redirects: missing oldmarketsquare.pl canonical redirect");
+
 if (errors.length) {
   console.error(errors.map((error) => `ERROR ${error}`).join("\n"));
   process.exit(1);
