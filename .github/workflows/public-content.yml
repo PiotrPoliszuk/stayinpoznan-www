@@ -1,0 +1,62 @@
+name: Public website content
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '15 4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-content-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: node --test tests/public-content.test.mjs
+      - run: node scripts/build.mjs && node scripts/check-site.mjs
+  refresh:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Read public facts
+        env:
+          STAY_RATINGS_FEED_URL: ${{ vars.STAY_RATINGS_FEED_URL }}
+          STAY_REFRESH_REPORT: /tmp/stayinpoznan-refresh.json
+        run: node scripts/update-public-content.mjs
+      - name: Build and check publication
+        run: node scripts/build.mjs && node scripts/check-site.mjs
+      - name: Publish changed facts and generated pages
+        run: |
+          git add -- content/public sitemap.xml ':glob:**/*.html'
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'Stay in Poznań content'
+          git config user.email 'content@stayinpoznan.pl'
+          git commit -m 'content: refresh sourced events and ratings'
+          git push origin HEAD:main
+      - name: Report unavailable sources
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, appendFile } from 'node:fs/promises';
+          const report = JSON.parse(await readFile('/tmp/stayinpoznan-refresh.json', 'utf8'));
+          await appendFile(process.env.GITHUB_STEP_SUMMARY, report.results.map(row => `${row.source}: ${row.state}`).join('\n\n'));
+          if (report.results.some(row => row.state === 'unavailable')) process.exitCode = 1;
+          NODE
