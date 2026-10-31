@@ -1,0 +1,24 @@
+{
+  "schema": "stayinpoznan.ratings.v1",
+  "ratings": [
+    {
+      "kind": "listing",
+      "slug": "ratusz-view",
+      "rating": 4.88,
+      "reviews": 179,
+      "observed_at": "2026-10-31T11:05:53Z",
+      "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
+      "method": "operator-export"
+    },
+    {
+      "kind": "host",
+      "rating": 4.86,
+      "reviews": 351,
+      "source_section": "host",
+      "superhost": true,
+      "observed_at": "2026-10-31T11:05:53Z",
+      "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
+      "method": "operator-export"
+    }
+  ]
+}

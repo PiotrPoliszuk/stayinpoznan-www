@@ -20,6 +20,7 @@ No package install is required. Use Node.js 20 or newer.
 ```bash
 node scripts/build.mjs
 node scripts/check-site.mjs
+node --test tests/public-content.test.mjs
 ```
 
 To preview locally:
@@ -32,11 +33,20 @@ Open `http://localhost:8088`.
 
 ## Publishing flow
 
-1. Gitea remains the source of truth.
-2. A feature branch is mirrored or pushed to GitHub.
-3. Cloudflare Pages creates a branch preview.
-4. Merge to `main` only after visual and content approval.
-5. Cloudflare Pages publishes `main` to production.
+Cloudflare Pages publishes `main` and creates configured feature branch previews.
+The daily `Public website content` workflow reads PZN's sanitized event facts,
+refreshes an optional authorized ratings feed, builds and validates the site, and
+commits changed public facts and HTML to `main`. No external descriptions,
+guest records, prices or credentials enter the website.
+
+GitHub `main` is the single writer for automated public content. Any Gitea copy
+must receive these commits before publishing other work; do not force mirror an
+older Gitea branch over it. The checked-in push helper only pushes feature branches.
+An inaccessible source keeps the last observation; the build still removes expired
+homepage promotions and stops showing ratings after 14 days.
+
+See [automatic public content](docs/automatic-content.md) for source status,
+ratings setup and the exact refresh/publishing flow.
 
 The generated HTML is committed, so Cloudflare Pages keeps the existing setup:
 
