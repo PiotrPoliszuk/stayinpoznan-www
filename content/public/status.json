@@ -1,10 +1,28 @@
 {
   "schema": "stayinpoznan.publication-status.v1",
-  "checked_at": null,
-  "workflow_url": null,
+  "checked_at": "2026-10-31T11:33:06.362Z",
+  "workflow_url": "https://github.com/PiotrPoliszuk/stayinpoznan-www/actions/runs/41197299054",
   "schedule": {
     "cron": "15 4 * * *",
     "timezone": "UTC"
   },
-  "sources": []
+  "sources": [
+    {
+      "source": "events",
+      "state": "unavailable",
+      "checked_at": "2026-10-31T11:33:06.362Z",
+      "last_success_at": null,
+      "latest_observed_at": null,
+      "cached_records": 0,
+      "error": "source-unavailable"
+    },
+    {
+      "source": "ratings",
+      "state": "not-configured",
+      "checked_at": "2026-10-31T11:33:06.362Z",
+      "last_success_at": null,
+      "latest_observed_at": "2026-10-31T11:05:53.000Z",
+      "cached_records": 2
+    }
+  ]
 }
