@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { apartments, attractions, events as editorialEvents, faq, nightlifePlaces, site, veganPlaces } from "../content/site.mjs";
 import { EVENT_MAX_AGE, RATING_MAX_AGE, isFresh, readJson, todayWarsaw } from './lib/public-data.mjs';
+import { renderReviewConsole } from './lib/review-console.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const indexedPaths = [];
@@ -600,9 +601,11 @@ await writePage("/poznan/nieoczywisty/", hiddenPoznanHubPage());
 for (const story of hiddenStories) await writePage(story.path, hiddenStoryPage(story));
 await writePage("/ua/", ukrainianLongStayPage());
 await writePage("/faq/", faqPage());
+await writePage('/podglad/', renderReviewConsole({ events: publicEvents, ratings: publicRatings,
+  status: await readJson(join(root, 'content/public/status.json'), {}), now }), { index: false });
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexedPaths.map((path) => `  <url><loc>${absolute(path)}</loc><lastmod>${site.modified}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 await writeFile(join(root, "sitemap.xml"), sitemap, "utf8");
 const notFoundBody = `<section class="coming-hero"><div class="wrap"><p class="eyebrow">Błąd 404</p><h1>Ta uliczka prowadzi<br><em>donikąd.</em></h1><p class="lead">Wróć na Stary Rynek albo wybierz jeden z naszych apartamentów.</p><div class="button-row"><a class="button button-primary" href="/">Strona główna</a><a class="button button-ghost" href="/apartamenty/">Apartamenty</a></div></div></section>`;
 await writeFile(join(root, "404.html"), cleanHtml(layout({ title: "Nie znaleziono strony | Stay in Poznań", description: "Strona nie istnieje. Wróć do Stay in Poznań i zobacz apartamenty przy Starym Rynku.", path: "/404.html", body: notFoundBody, noindex: true, pageClass: "not-found-page" })), "utf8");
-console.log(`Built ${indexedPaths.length} indexable pages, 1 noindex preview and a 404 page.`);
+console.log(`Built ${indexedPaths.length} indexable pages, 2 noindex previews and a 404 page.`);
