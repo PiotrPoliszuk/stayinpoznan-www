@@ -7,6 +7,26 @@ builds the website, checks every generated page, and pushes only changed public
 JSON, HTML and sitemap. A normal fast-forward push rejects concurrent changes.
 Use **Run workflow** for an immediate refresh after a source becomes available.
 
+## Checking a source rollout
+
+After deploying Mission, check the public feed from outside the Mission host.
+A successful internal module check does not prove that the public proxy route is
+reachable, or that either upstream event source has completed its first import.
+The public response must use `pzn.public-events.v1`; inspect each source's last
+successful observation and coverage rather than treating an empty HTTP 200 as
+proof of a populated calendar.
+
+Start a fresh **Run workflow** on the current `main` revision after the source
+rollout. Do not rerun an older failed refresh after another publication has
+advanced `main`: its pinned checkout intentionally cannot overwrite newer work.
+Check the source results in the new run and `/podglad/`, then verify the resulting
+content commit's Cloudflare Pages deployment separately. A green validation job,
+an available feed and a successful public deployment are separate checks.
+
+If the source is unavailable, the workflow still publishes safe status metadata
+and applies expiry rules before reporting the failure. Do not replace source
+dates with the publication time or manually mark a failed acquisition successful.
+
 This is the single automatic writer for website content. The old README described
 Gitea as the source of truth, but no Gitea URL or second remote is configured in the
 repository. A Gitea copy must pull these commits before publishing other work.
@@ -106,7 +126,7 @@ source, not an access grant. No aggregate is calculated between properties.
 ## Verification and local execution
 
 ```sh
-node --test tests/public-content.test.mjs
+node --test tests/*.test.mjs
 node scripts/update-public-content.mjs
 node scripts/build.mjs
 node scripts/check-site.mjs

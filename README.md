@@ -20,7 +20,7 @@ No package install is required. Use Node.js 20 or newer.
 ```bash
 node scripts/build.mjs
 node scripts/check-site.mjs
-node --test tests/public-content.test.mjs
+node --test tests/*.test.mjs
 ```
 
 To preview locally:
