@@ -48,6 +48,10 @@ homepage promotions and stops showing ratings after 14 days.
 See [automatic public content](docs/automatic-content.md) for source status,
 ratings setup and the exact refresh/publishing flow.
 
+The optional `/podglad/` page shows public source observations and prepares
+suggestions for review in GitHub. It is excluded from search indexing and the
+sitemap, and grants no editing privileges.
+
 The generated HTML is committed, so Cloudflare Pages keeps the existing setup:
 
 - Framework preset: None

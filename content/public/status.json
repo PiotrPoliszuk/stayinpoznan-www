@@ -1,0 +1,10 @@
+{
+  "schema": "stayinpoznan.publication-status.v1",
+  "checked_at": null,
+  "workflow_url": null,
+  "schedule": {
+    "cron": "15 4 * * *",
+    "timezone": "UTC"
+  },
+  "sources": []
+}

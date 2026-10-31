@@ -2,7 +2,7 @@
 
 The public website stays static and dependency-free. Cloudflare Pages uses the
 existing committed-HTML deployment. `.github/workflows/public-content.yml` checks
-pull requests and runs daily at 04:15 UTC on `main`. The refresh job reads sources,
+pull requests and refreshes on validated code pushes to `main`, daily at 04:15 UTC, and on explicit workflow dispatch. The refresh job reads sources,
 builds the website, checks every generated page, and pushes only changed public
 JSON, HTML and sitemap. A normal fast-forward push rejects concurrent changes.
 Use **Run workflow** for an immediate refresh after a source becomes available.
@@ -39,6 +39,28 @@ revisions prevent duplicate pages and backward updates. The archive is bounded
 to 2,000 records; reaching this limit requests a retention review instead of silently
 deleting old URLs. On a source failure the previous snapshot remains, with source
 dates visible. Fresh automatic facts expire after eight days.
+
+## Optional preview and suggestions
+
+`/podglad/` is a public, non-indexed snapshot of source observations, upcoming
+events and dated ratings. It is excluded from the sitemap and marketing menu.
+No guest data, credentials or edit permissions are exposed. Source read metadata
+comes from `content/public/status.json`; a missing record means no confirmed
+automatic read, and a successful source read does not prove Cloudflare deployment.
+Links lead to production, pull-request previews and the actual Actions run when
+its recorded URL is available.
+
+The suggestion form prepares a bounded draft on this repository's GitHub Issues
+page. A per-event action includes its EVT number, revision and observation time.
+The author opens the draft and explicitly sends it in GitHub, which requires
+their account. Merely opening the preview or preparing a suggestion performs no
+network write and publishes nothing. Proposals do not pause the scheduled
+publication of valid source facts.
+
+`node --test tests/review-console.test.mjs` checks escaped source content, exact
+record context, draft URL limits and the actual generated page's exclusion from
+indexing and the sitemap. Browser QA also checks keyboard interaction, the mobile
+layout and absence of writes while preparing a draft.
 
 ## Host and listing ratings
 
