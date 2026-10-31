@@ -16,6 +16,38 @@ function publicError(error) {
   return 'source-unavailable';
 }
 
+const transportFailures = new Map([
+  ['ENOTFOUND', 'dns'], ['EAI_AGAIN', 'dns'],
+  ['ECONNREFUSED', 'connection'], ['ECONNRESET', 'connection'], ['ENETUNREACH', 'connection'],
+  ['EHOSTUNREACH', 'connection'], ['UND_ERR_SOCKET', 'connection'],
+  ['ETIMEDOUT', 'timeout'], ['UND_ERR_CONNECT_TIMEOUT', 'timeout'],
+  ['UND_ERR_HEADERS_TIMEOUT', 'timeout'], ['UND_ERR_BODY_TIMEOUT', 'timeout'],
+  ['CERT_HAS_EXPIRED', 'tls'], ['CERT_NOT_YET_VALID', 'tls'],
+  ['DEPTH_ZERO_SELF_SIGNED_CERT', 'tls'], ['SELF_SIGNED_CERT_IN_CHAIN', 'tls'],
+  ['UNABLE_TO_VERIFY_LEAF_SIGNATURE', 'tls'], ['UNABLE_TO_GET_ISSUER_CERT_LOCALLY', 'tls'],
+  ['ERR_TLS_CERT_ALTNAME_INVALID', 'tls'],
+]);
+
+function workflowDiagnostic(error) {
+  // This report is not copied to public status. Even logs receive only allowlisted
+  // constants and an HTTP number, never raw messages, URLs, headers or addresses.
+  if (['http', 'non-json'].includes(error?.feedFailure)
+      && Number.isInteger(error.httpStatus) && error.httpStatus >= 100 && error.httpStatus <= 599) {
+    return { kind: error.feedFailure, http_status: error.httpStatus };
+  }
+  if (error?.name === 'TimeoutError' || error?.name === 'AbortError') return { kind: 'timeout' };
+  if (error?.cause?.message === 'unexpected redirect') return { kind: 'redirect-blocked' };
+  const causes = [error, error?.cause,
+    ...(Array.isArray(error?.cause?.errors) ? error.cause.errors.slice(0, 4) : [])];
+  for (const cause of causes) {
+    if (transportFailures.has(cause?.code)) return { kind: transportFailures.get(cause.code), code: cause.code };
+  }
+  const classification = publicError(error);
+  if (classification === 'source-too-large') return { kind: 'size-limit' };
+  if (classification === 'invalid-source-data') return { kind: 'invalid-source-data' };
+  return { kind: 'unknown' };
+}
+
 function workflowLink(value) {
   return /^https:\/\/github\.com\/PiotrPoliszuk\/stayinpoznan-www\/actions\/runs\/\d+$/.test(value || '') ? value : null;
 }
@@ -55,7 +87,8 @@ export async function refreshPublicContent({ root = defaultRoot, now = new Date(
           ...(source === 'events' ? { coverage: 'partial' } : {}) };
         cached = merged[source]; lastSuccess = checkedAt;
       } catch (error) {
-        result = { source, state: 'unavailable', changed: false, error: publicError(error) };
+        result = { source, state: 'unavailable', changed: false, error: publicError(error),
+          diagnostic: workflowDiagnostic(error) };
       }
     }
     const observations = cached.map(record => validStamp(record.observed_at)).filter(Boolean)

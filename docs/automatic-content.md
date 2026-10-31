@@ -27,6 +27,12 @@ If the source is unavailable, the workflow still publishes safe status metadata
 and applies expiry rules before reporting the failure. Do not replace source
 dates with the publication time or manually mark a failed acquisition successful.
 
+The refresh report in Actions distinguishes HTTP status, a non-JSON response,
+DNS/connection/TLS failures, timeouts and blocked redirects using bounded codes.
+It never logs response bodies, headers, URLs or raw transport exceptions. These
+details are not committed to public `status.json`; the website keeps the generic
+source error and the previous observation. Actions logs may themselves be public.
+
 This is the single automatic writer for website content. The old README described
 Gitea as the source of truth, but no Gitea URL or second remote is configured in the
 repository. A Gitea copy must pull these commits before publishing other work.

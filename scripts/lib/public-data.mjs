@@ -94,7 +94,12 @@ export async function fetchJson(url, { fetcher = fetch, timeout = 15_000, limit 
   const parsed = new URL(url);
   if (parsed.protocol !== 'https:' || parsed.username || parsed.password || parsed.port || /^[\d.:[\]]+$/.test(parsed.hostname) || !parsed.hostname.includes('.') || parsed.hostname.endsWith('.local')) throw new Error('Public HTTPS feed required');
   const response = await fetcher(parsed, { headers: { Accept: 'application/json' }, redirect: 'error', signal: AbortSignal.timeout(timeout) });
-  if (!response.ok || !/application\/(?:[\w.-]+\+)?json/.test(response.headers.get('content-type') || '')) throw new Error(`Feed unavailable (${response.status})`);
+  if (!response.ok || !/application\/(?:[\w.-]+\+)?json/.test(response.headers.get('content-type') || '')) {
+    // Typed metadata is for the workflow report. Never retain headers or bodies.
+    throw Object.assign(new Error(`Feed unavailable (${response.status})`), {
+      feedFailure: response.ok ? 'non-json' : 'http', httpStatus: response.status,
+    });
+  }
   if (Number(response.headers.get('content-length')) > limit) throw new Error('Feed too large');
   const reader = response.body.getReader();
   const decoder = new TextDecoder(); let content = ''; let bytes = 0;

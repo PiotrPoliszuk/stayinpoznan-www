@@ -61,6 +61,21 @@ test('network reads are bounded JSON HTTPS and never follow redirects', async ()
   await assert.rejects(fetchJson('https://mission.pzn.me/api/public/events', { limit: 3, fetcher: async () => new Response('1234', { headers: { 'content-type': 'application/json' } }) }), /too large/);
   await assert.rejects(fetchJson('http://mission.pzn.me/events'), /HTTPS/);
 });
+test('HTTP and non-JSON failures retain only typed workflow metadata', async () => {
+  const url = 'https://mission.pzn.me/api/public/events';
+  for (const status of [401, 403, 404, 500, 503]) {
+    await assert.rejects(fetchJson(url, { fetcher: async () => new Response('PRIVATE body', {
+      status, headers: { 'content-type': 'text/html', 'x-private': 'SECRET' },
+    }) }), error => {
+      assert.equal(error.feedFailure, 'http'); assert.equal(error.httpStatus, status);
+      assert.doesNotMatch(JSON.stringify(error), /PRIVATE|SECRET|x-private/);
+      return true;
+    });
+  }
+  await assert.rejects(fetchJson(url, { fetcher: async () => new Response('PRIVATE sign-in', {
+    headers: { 'content-type': 'text/html' },
+  }) }), error => error.feedFailure === 'non-json' && error.httpStatus === 200);
+});
 test('actual build adds stable pages and guide, escapes sources, retires past promotions and stale ratings', async () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
   const temp = await mkdtemp(join(tmpdir(), 'stayinpoznan-build-'));

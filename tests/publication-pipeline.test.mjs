@@ -8,6 +8,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { refreshPublicContent } from '../scripts/update-public-content.mjs';
 import { publishPublicContent } from '../scripts/publish-public-content.mjs';
+import { fetchJson } from '../scripts/lib/public-data.mjs';
 
 const exec = promisify(execFile);
 const now = new Date('2026-10-31T12:00:00Z');
@@ -68,6 +69,56 @@ test('successful source checks have durable evidence and identical inputs do not
     assert.equal(second.results.some(result => result.changed), false);
     await refreshPublicContent({ ...request, workflowUrl: 'https://malicious.invalid/token' });
     assert.equal((await json(join(root, 'content/public/status.json'))).workflow_url, null);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test('workflow diagnostics separate HTTP, content and transport without exposing raw errors or changing public status', async () => {
+  const cases = [
+    ...[401, 403, 404, 500, 503].map(status => ({
+      diagnostic: { kind: 'http', http_status: status },
+      fetcher: async () => new Response('PRIVATE response body', { status, headers: { 'content-type': 'text/html' } }),
+    })),
+    { diagnostic: { kind: 'non-json', http_status: 200 },
+      fetcher: async () => new Response('PRIVATE sign-in page', { headers: { 'content-type': 'text/html' } }) },
+    ...[['ENOTFOUND', 'dns'], ['EAI_AGAIN', 'dns'], ['ECONNREFUSED', 'connection'],
+      ['UND_ERR_CONNECT_TIMEOUT', 'timeout'], ['CERT_HAS_EXPIRED', 'tls'],
+      ['ERR_TLS_CERT_ALTNAME_INVALID', 'tls']].map(([code, kind]) => ({
+      diagnostic: { kind, code },
+      error: new TypeError('PRIVATE transport exception', { cause: Object.assign(new Error('SECRET hostname/address'), { code }) }),
+    })),
+    { diagnostic: { kind: 'connection', code: 'ECONNRESET' },
+      error: new TypeError('PRIVATE aggregate', { cause: new AggregateError([
+        Object.assign(new Error('SECRET address'), { code: 'ECONNRESET' }),
+      ]) }) },
+    { diagnostic: { kind: 'timeout' }, error: new DOMException('PRIVATE request', 'TimeoutError') },
+    { diagnostic: { kind: 'redirect-blocked' },
+      error: new TypeError('PRIVATE redirect URL', { cause: new Error('unexpected redirect') }) },
+    { diagnostic: { kind: 'unknown' },
+      error: Object.assign(new Error('PRIVATE https://secret.invalid/token'), { code: 'SECRET_CODE' }) },
+  ];
+  const root = await sourceFixture();
+  try {
+    const lastSuccess = '2026-10-30T12:00:00.000Z';
+    await writeJson(join(root, 'content/public/status.json'), { sources: [{ source: 'events', last_success_at: lastSuccess }] });
+    const previousEvents = await readFile(join(root, 'content/public/events.json'), 'utf8');
+    let previousStatus;
+    for (const sample of cases) {
+      const readFeed = sample.error ? async () => { throw sample.error; }
+        : async () => fetchJson('https://mission.pzn.me/api/public/events', { fetcher: sample.fetcher });
+      const report = await refreshPublicContent({ root, now, readFeed });
+      assert.deepEqual(report.results[0].diagnostic, sample.diagnostic);
+      const status = await json(join(root, 'content/public/status.json'));
+      assert.equal(status.sources[0].last_success_at, lastSuccess);
+      assert.equal(status.sources[0].cached_records, 1);
+      assert.equal('diagnostic' in status.sources[0], false);
+      assert.doesNotMatch(JSON.stringify({ report, status }), /PRIVATE|SECRET|secret\.invalid|token|hostname|address/);
+      assert.equal(await readFile(join(root, 'content/public/events.json'), 'utf8'), previousEvents);
+      // Detailed failure changes do not rewrite a generic public observation.
+      if (previousStatus && report.results[0].error === 'source-unavailable') {
+        assert.equal(report.status_changed, previousStatus.sources[0].error !== 'source-unavailable');
+      }
+      previousStatus = status;
+    }
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
