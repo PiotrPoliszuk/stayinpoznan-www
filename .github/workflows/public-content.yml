@@ -41,6 +41,7 @@ jobs:
           package-manager-cache: false
       - name: Read public facts
         env:
+          STAY_PUBLIC_FACTS_MODE: repository
           STAY_RATINGS_FEED_URL: ${{ vars.STAY_RATINGS_FEED_URL }}
           STAY_REFRESH_REPORT: /tmp/stayinpoznan-refresh.json
         run: node scripts/update-public-content.mjs

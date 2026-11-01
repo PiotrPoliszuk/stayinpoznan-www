@@ -1,0 +1,33 @@
+{
+  "schema": "stayinpoznan.ratings.v1",
+  "ratings": [
+    {
+      "method": "public-page-observation",
+      "observed_at": "2026-11-01T09:26:34Z",
+      "kind": "listing",
+      "slug": "ratusz-view",
+      "rating": 4.88,
+      "reviews": 179,
+      "source_url": "https://www.airbnb.com/rooms/1396133241621872627"
+    },
+    {
+      "method": "public-page-observation",
+      "observed_at": "2026-11-01T09:26:34Z",
+      "kind": "listing",
+      "slug": "koziolki-view",
+      "rating": 4.84,
+      "reviews": 172,
+      "source_url": "https://www.airbnb.com/rooms/1396324973760158951"
+    },
+    {
+      "method": "public-page-observation",
+      "observed_at": "2026-11-01T09:26:34Z",
+      "kind": "host",
+      "rating": 4.86,
+      "reviews": 351,
+      "source_section": "host",
+      "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
+      "superhost": true
+    }
+  ]
+}

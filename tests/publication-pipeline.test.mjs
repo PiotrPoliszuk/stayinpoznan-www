@@ -6,11 +6,14 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { refreshPublicContent } from '../scripts/update-public-content.mjs';
+import { refreshPublicContent as refreshWithMode } from '../scripts/update-public-content.mjs';
 import { publishPublicContent } from '../scripts/publish-public-content.mjs';
 import { fetchJson } from '../scripts/lib/public-data.mjs';
 
 const exec = promisify(execFile);
+// These cases exercise the explicit legacy public-HTTPS adapter. Production
+// defaults to the checked-in outbound snapshot and never probes private DNS.
+const refreshPublicContent = options => refreshWithMode({ ...options, sourceMode: 'http' });
 const now = new Date('2026-10-31T12:00:00Z');
 const event = { id: 'EVT-000001', title: 'Poznań test', start_date: '2026-11-02', end_date: '2026-11-03',
   location: 'Poznań', url: 'https://www.poznan.pl/mim/events/test,188318.html', source: 'Miasto Poznań',
@@ -61,8 +64,9 @@ test('successful source checks have durable evidence and identical inputs do not
       workflowUrl: 'https://github.com/PiotrPoliszuk/stayinpoznan-www/actions/runs/12345' };
     const first = await refreshPublicContent(request);
     const status = await json(join(root, 'content/public/status.json'));
-    assert.equal(first.results.every(result => result.state === 'read'), true);
-    assert.equal(status.sources.every(source => source.last_success_at === now.toISOString()), true);
+    assert.equal(first.results.slice(0, 2).every(result => result.state === 'read'), true);
+    assert.equal(status.sources.slice(0, 2).every(source => source.last_success_at === now.toISOString()), true);
+    assert.equal(first.results[2].state, 'not-configured');
     assert.equal(status.workflow_url, request.workflowUrl);
     const second = await refreshPublicContent(request);
     assert.equal(second.status_changed, false);

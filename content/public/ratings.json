@@ -6,19 +6,28 @@
       "slug": "ratusz-view",
       "rating": 4.88,
       "reviews": 179,
-      "observed_at": "2026-10-31T11:05:53Z",
+      "observed_at": "2026-11-01T09:26:34Z",
       "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
-      "method": "operator-export"
+      "method": "public-page-observation"
     },
     {
       "kind": "host",
       "rating": 4.86,
       "reviews": 351,
-      "source_section": "host",
-      "superhost": true,
-      "observed_at": "2026-10-31T11:05:53Z",
+      "observed_at": "2026-11-01T09:26:34Z",
       "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
-      "method": "operator-export"
+      "method": "public-page-observation",
+      "source_section": "host",
+      "superhost": true
+    },
+    {
+      "kind": "listing",
+      "slug": "koziolki-view",
+      "rating": 4.84,
+      "reviews": 172,
+      "observed_at": "2026-11-01T09:26:34Z",
+      "source_url": "https://www.airbnb.com/rooms/1396324973760158951",
+      "method": "public-page-observation"
     }
   ]
 }
