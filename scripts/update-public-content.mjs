@@ -76,6 +76,9 @@ export async function refreshPublicContent({ root = defaultRoot, now = new Date(
     await rename(`${path}.tmp`, path);
     return true;
   }
+  const websiteSettings = snapshot?.website
+    ? { state: 'read', changed: await save('website', snapshot.website), snapshot_at: snapshot.generated_at }
+    : { state: snapshotError ? 'unavailable' : 'not-configured', changed: false };
   const eventUrl = new URL('https://mission.pzn.me/api/public/events');
   eventUrl.searchParams.set('start', todayWarsaw(now)); eventUrl.searchParams.set('days', '366');
   for (const definition of [
@@ -119,7 +122,8 @@ export async function refreshPublicContent({ root = defaultRoot, now = new Date(
     results.push(result);
   }
   const status = { schema: 'stayinpoznan.publication-status.v1', checked_at: checkedAt,
-    workflow_url: workflowLink(workflowUrl), schedule: { cron: '15 4 * * *', timezone: 'UTC' }, sources };
+    workflow_url: workflowLink(workflowUrl), schedule: { cron: '15 4 * * *', timezone: 'UTC' }, sources,
+    website_settings: { state: websiteSettings.state, ...(websiteSettings.snapshot_at ? { snapshot_at: websiteSettings.snapshot_at } : {}) } };
   return { schema: 'stayinpoznan.refresh.v1', checked_at: checkedAt, results,
     status_changed: await save('status', status) };
 }

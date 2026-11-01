@@ -2,13 +2,14 @@ import { open } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { isFresh, normalizeEvents, normalizeRatings, normalizeReviews } from './public-data.mjs';
+import { normalizeWebsiteSettings } from './website-settings.mjs';
 
 export const SNAPSHOT_PATH = 'content/incoming/mission-public-facts.json';
 export const PUBLIC_RATINGS_PATH = 'content/incoming/airbnb-public-ratings.json';
 const LIMIT = 2 * 1024 * 1024;
 
 export function normalizeMissionSnapshot(body, now = new Date()) {
-  const allowed = new Set(['schema', 'generated_at', 'events', 'ratings', 'reviews', 'source_states']);
+  const allowed = new Set(['schema', 'generated_at', 'events', 'ratings', 'reviews', 'source_states', 'website']);
   if (!body || typeof body !== 'object' || Array.isArray(body)
       || Object.keys(body).some(key => !allowed.has(key)) || body.schema !== 'pzn.website-facts.v1'
       || !isFresh(body.generated_at, 36 * 3600_000, now)
@@ -20,6 +21,7 @@ export function normalizeMissionSnapshot(body, now = new Date()) {
     if ((body.source_states[source] === 'configured') !== Object.hasOwn(body, source)) throw new Error('Invalid Mission source state');
     if (body.source_states[source] === 'configured') result[source] = normalizer(body[source], now);
   }
+  if (Object.hasOwn(body, 'website')) result.website = normalizeWebsiteSettings(body.website);
   return result;
 }
 

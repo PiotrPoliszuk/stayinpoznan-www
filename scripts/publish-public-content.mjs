@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 const exec = promisify(execFile);
-const publicJson = new Set(['content/public/events.json', 'content/public/ratings.json', 'content/public/reviews.json', 'content/public/status.json']);
+const publicJson = new Set(['content/public/events.json', 'content/public/ratings.json', 'content/public/reviews.json', 'content/public/status.json', 'content/public/website.json']);
 
 export async function publishPublicContent({ cwd = process.cwd(), env = process.env } = {}) {
   if (env.GITHUB_REF !== 'refs/heads/main' || !['push', 'schedule', 'workflow_dispatch'].includes(env.GITHUB_EVENT_NAME)) {
