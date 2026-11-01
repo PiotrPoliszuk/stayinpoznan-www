@@ -3,7 +3,7 @@
   "ratings": [
     {
       "method": "public-page-observation",
-      "observed_at": "2026-11-01T09:26:34Z",
+      "observed_at": "2026-11-01T09:50:28Z",
       "kind": "listing",
       "slug": "ratusz-view",
       "rating": 4.88,
@@ -12,7 +12,7 @@
     },
     {
       "method": "public-page-observation",
-      "observed_at": "2026-11-01T09:26:34Z",
+      "observed_at": "2026-11-01T09:50:28Z",
       "kind": "listing",
       "slug": "koziolki-view",
       "rating": 4.84,
@@ -21,7 +21,7 @@
     },
     {
       "method": "public-page-observation",
-      "observed_at": "2026-11-01T09:26:34Z",
+      "observed_at": "2026-11-01T09:50:28Z",
       "kind": "host",
       "rating": 4.86,
       "reviews": 351,
