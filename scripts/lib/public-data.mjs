@@ -2,8 +2,10 @@ import { readFile } from 'node:fs/promises';
 
 export const EVENT_SCHEMA = 'pzn.public-events.v1';
 export const RATING_SCHEMA = 'stayinpoznan.ratings.v1';
+export const REVIEW_SCHEMA = 'stayinpoznan.reviews.v1';
 export const EVENT_MAX_AGE = 8 * 86400_000;
 export const RATING_MAX_AGE = 14 * 86400_000;
+export const REVIEW_MAX_AGE = 14 * 86400_000;
 export const KNOWN_LISTINGS = new Map([
   ['ratusz-view', '1396133241621872627'],
   ['koziolki-view', '1396324973760158951'],
@@ -62,9 +64,10 @@ export function normalizeRatings(body, now = new Date()) {
   const seen = new Set();
   return { schema: RATING_SCHEMA, ratings: body.ratings.map(record => {
     const key = record.kind === 'host' ? 'host' : record.slug;
-    if (!['host', 'listing'].includes(record.kind) || (record.kind === 'listing' && !KNOWN_LISTINGS.has(key)) || seen.has(key) || !Number.isFinite(record.rating) || record.rating < 0 || record.rating > 5 || !Number.isSafeInteger(record.reviews) || record.reviews < 1 || !['authorized-api', 'operator-export'].includes(record.method) || !isFresh(record.observed_at, RATING_MAX_AGE, now)) throw new Error('Invalid or stale rating record');
+    if (!['host', 'listing'].includes(record.kind) || (record.kind === 'listing' && !KNOWN_LISTINGS.has(key)) || seen.has(key) || !Number.isFinite(record.rating) || record.rating < 0 || record.rating > 5 || !Number.isSafeInteger(record.reviews) || record.reviews < 1 || !['authorized-api', 'operator-export', 'public-page-observation'].includes(record.method) || !isFresh(record.observed_at, RATING_MAX_AGE, now)) throw new Error('Invalid or stale rating record');
     seen.add(key);
     const url = httpsUrl(record.source_url, new Set(['www.airbnb.com', 'airbnb.com', 'www.airbnb.pl', 'airbnb.pl']));
+    if (new URL(url).search || new URL(url).hash) throw new Error('Rating source must not contain query data');
     const sourcePath = new URL(url).pathname;
     if (record.kind === 'listing' && sourcePath !== `/rooms/${KNOWN_LISTINGS.get(key)}`) throw new Error('Rating belongs to another listing');
     if (record.kind === 'host' && !(
@@ -86,6 +89,37 @@ export function mergeRatings(previous, incoming) {
     records.set(key(record), record);
   }
   return { schema: RATING_SCHEMA, ratings: [...records.values()] };
+}
+export function normalizeReviews(body, now = new Date()) {
+  if (body?.schema !== REVIEW_SCHEMA || !Array.isArray(body.reviews) || body.reviews.length > 12) throw new Error('Invalid reviews feed');
+  const seen = new Set();
+  return { schema: REVIEW_SCHEMA, reviews: body.reviews.map(record => {
+    if (!/^[A-Za-z0-9_-]{1,100}$/.test(record.id) || seen.has(record.id) || !KNOWN_LISTINGS.has(record.slug)
+        || record.public !== true || record.republication !== 'authorized'
+        || !['authorized-api', 'operator-export'].includes(record.method)
+        || !Number.isFinite(record.rating) || record.rating < 0 || record.rating > 5
+        || !validDate(record.published_date) || !isFresh(record.observed_at, REVIEW_MAX_AGE, now)) throw new Error('Invalid public review');
+    const excerpt = text(record.excerpt, 240), author = text(record.author, 40);
+    if (excerpt.split(/\s+/u).length > 20 || !/^\p{L}+(?:[-']\p{L}+)*$/u.test(author)) throw new Error('Invalid review excerpt or first name');
+    const url = httpsUrl(record.source_url, new Set(['www.airbnb.com', 'airbnb.com', 'www.airbnb.pl', 'airbnb.pl']));
+    const parsed = new URL(url);
+    if (parsed.pathname !== `/rooms/${KNOWN_LISTINGS.get(record.slug)}` || parsed.search || parsed.hash) throw new Error('Review belongs to another listing');
+    seen.add(record.id);
+    return { id: record.id, slug: record.slug, rating: record.rating, excerpt, author,
+      published_date: record.published_date, observed_at: record.observed_at, source_url: url,
+      public: true, republication: 'authorized', method: record.method };
+  }) };
+}
+export function mergeReviews(previous, incoming) {
+  const records = new Map((previous?.reviews || []).map(record => [record.id, record]));
+  for (const record of incoming.reviews) {
+    const old = records.get(record.id);
+    if (old && (old.slug !== record.slug || Date.parse(record.observed_at) < Date.parse(old.observed_at))) throw new Error('Reviews feed moved backwards');
+    records.set(record.id, record);
+  }
+  // Quotes have no permanent detail-page URL. Older observations remain in Git
+  // history while the working cache retains at most 100 recent public quotes.
+  return { schema: REVIEW_SCHEMA, reviews: [...records.values()].sort((a, b) => b.published_date.localeCompare(a.published_date) || a.id.localeCompare(b.id)).slice(0, 100) };
 }
 export async function readJson(path, fallback) {
   try { return JSON.parse(await readFile(path, 'utf8')); } catch (error) { if (error.code === 'ENOENT') return fallback; throw error; }

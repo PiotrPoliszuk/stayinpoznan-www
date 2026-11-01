@@ -37,6 +37,10 @@
   p + p { margin-top: 1.1em; }
   .wrap { width: min(1240px, calc(100% - 64px)); margin-inline: auto; }
   .section { padding-block: clamp(90px, 11vw, 160px); }
+  .public-quotes-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); margin-block: 36px; }
+  .public-quotes figure { border-top: 1px solid currentColor; margin: 0; padding-top: 24px; }
+  .public-quotes blockquote { font-family: var(--font-heading, Georgia, serif); font-size: 1.5rem; line-height: 1.5; margin: 0 0 24px; }
+  .public-quotes figcaption, .public-quotes > p:last-child { color: var(--ink-soft); font-size: .85rem; }
   .eyebrow { color: var(--copper); font-size: .72rem; font-weight: 800; letter-spacing: .19em; line-height: 1.4; text-transform: uppercase; }
   .lead { color: var(--ink-soft); font-size: clamp(1.1rem, 1.8vw, 1.42rem); line-height: 1.55; max-width: 740px; }
   .sr-only { clip: rect(0 0 0 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }

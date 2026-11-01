@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { apartments, attractions, events as editorialEvents, faq, nightlifePlaces, site, veganPlaces } from "../content/site.mjs";
-import { EVENT_MAX_AGE, RATING_MAX_AGE, isFresh, readJson, todayWarsaw } from './lib/public-data.mjs';
+import { EVENT_MAX_AGE, RATING_MAX_AGE, REVIEW_MAX_AGE, normalizeReviews, isFresh, readJson, todayWarsaw } from './lib/public-data.mjs';
 import { renderReviewConsole } from './lib/review-console.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -12,6 +12,9 @@ if (!Number.isFinite(now.getTime())) throw new Error('Invalid build date');
 const today = todayWarsaw(now);
 const publicEvents = await readJson(join(root, 'content/public/events.json'), { events: [] });
 const publicRatings = await readJson(join(root, 'content/public/ratings.json'), { ratings: [] });
+const publicReviews = await readJson(join(root, 'content/public/reviews.json'), { reviews: [] });
+const freshReviews = (publicReviews.reviews || []).filter(record => isFresh(record.observed_at, REVIEW_MAX_AGE, now))
+  .map(record => normalizeReviews({ schema: 'stayinpoznan.reviews.v1', reviews: [record] }, now).reviews[0]);
 const freshRatings = (publicRatings.ratings || []).filter(record => isFresh(record.observed_at, RATING_MAX_AGE, now));
 const hostRating = freshRatings.find(record => record.kind === 'host');
 const ratingFor = apartment => freshRatings.find(record => record.kind === 'listing' && record.slug === apartment.slug);
@@ -42,6 +45,14 @@ const eventState = event => event.status === 'cancelled' ? 'Odwołane według ź
 function ratingPill(apartment, lang = 'pl') {
   const record = ratingFor(apartment);
   return record ? `<span class="rating-pill" title="${lang === 'pl' ? 'Odczyt' : 'Observed'}: ${record.observed_at.slice(0, 10)}">★ ${record.rating.toFixed(2)} <small>(${record.reviews})</small></span>` : '';
+}
+
+function selectedReviews(apartment, lang = 'pl') {
+  const rows = freshReviews.filter(record => record.slug === apartment.slug)
+    .sort((a, b) => b.rating - a.rating || b.published_date.localeCompare(a.published_date) || a.id.localeCompare(b.id)).slice(0, 3);
+  if (!rows.length) return '';
+  const isPl = lang === 'pl';
+  return `<section class="section wrap public-quotes"><p class="eyebrow">${isPl ? 'Słowami gości' : 'In our guests’ words'}</p><h2>${isPl ? 'Wybrane opinie' : 'Selected reviews'}</h2><div class="public-quotes-grid">${rows.map(row => `<figure><blockquote>${escapeHtml(row.excerpt)}</blockquote><figcaption>${escapeHtml(row.author)} · ${escapeHtml(row.published_date)} · ★ ${row.rating.toFixed(1)}<br><a href="${escapeHtml(row.source_url)}" rel="noopener noreferrer">Airbnb</a> · ${isPl ? 'odczyt' : 'observed'} ${escapeHtml(row.observed_at.slice(0, 10))}</figcaption></figure>`).join('')}</div><p>${isPl ? 'Krótkie cytaty z wybranych publicznych opinii. Wszystkie aktualne opinie znajdziesz w ofercie Airbnb.' : 'Short excerpts from selected public reviews. Read all current reviews on the Airbnb listing.'}</p></section>`;
 }
 
 async function writePage(path, html, { index = true } = {}) {
@@ -265,6 +276,7 @@ function apartmentPage(apartment, lang = "pl") {
   <section class="section wrap amenities-grid"><div><p class="eyebrow">${isPl ? "Na miejscu" : "Amenities"}</p><h2>${isPl ? "Wygodnie od pierwszej minuty" : "Comfort from the first minute"}</h2><p>${isPl ? "Dostajesz cały apartament — bez współdzielonej kuchni czy łazienki." : "The entire apartment is yours, with no shared kitchen or bathroom."}</p></div><ul>${apartment.amenities.map((item) => `<li><span aria-hidden="true">✓</span>${isPl ? item : ({ "Klimatyzacja": "Air conditioning", "Szybkie Wi-Fi": "Fast Wi-Fi", "Kuchnia": "Equipped kitchen", "TV": "TV", "Miejsce do pracy": "Workspace", "Widok na miasto": "City view", "Samodzielne zameldowanie": "Self check-in", "Pościel i ręczniki": "Bed linen and towels", "Prywatna łazienka": "Private bathroom" }[item] || item)}</li>`).join("")}</ul></section>
   <aside class="honest-note"><div class="wrap"><span class="note-icon" aria-hidden="true">↟</span><div><p class="eyebrow">${isPl ? "Uczciwie przed rezerwacją" : "Good to know before booking"}</p><h2>${isPl ? "Piękny widok ma cztery piętra." : "The view comes with four flights of stairs."}</h2><p>${isPl ? apartment.note : "The apartment is on the fourth floor of a historic building dating from around 1900. There is no lift, so it may not suit guests with limited mobility or very heavy luggage."}</p></div></div></aside>
   <section class="section wrap location-mini"><div><p class="eyebrow">${isPl ? "Wielka 23" : "Wielka 23"}</p><h2>${isPl ? "100 metrów od serca Poznania" : "100 metres from the heart of Poznań"}</h2><p>${isPl ? "Ratusz, koziołki, Rogalowe Muzeum, Fara, restauracje i kawiarnie są w zasięgu krótkiego spaceru. Na Cytadelę i Ostrów Tumski dojdziesz pieszo, a do MTP wygodnie dojedziesz tramwajem." : "The Town Hall, famous goats, Croissant Museum, Fara church, restaurants and cafés are a short walk away. Citadel Park and Cathedral Island are walkable, while Poznań Expo is easy to reach by tram."}</p><a class="text-link" href="/poznan/stary-rynek/">${isPl ? "Przewodnik po okolicy" : "Explore the neighbourhood"} <span aria-hidden="true">↗</span></a></div><div class="map-card" aria-label="${isPl ? "Schemat lokalizacji" : "Location overview"}"><span class="map-river"></span><span class="map-pin"><i></i>${site.name}<small>${site.address}</small></span><span class="map-label market">${isPl ? "Stary Rynek" : "Old Market Square"}</span><span class="map-label citadel">Cytadela</span><span class="map-label cathedral">Ostrów Tumski</span></div></section>
+  ${selectedReviews(apartment, lang)}
   <section class="booking-panel"><div class="wrap"><div><p class="eyebrow">${isPl ? "Aktualna dostępność" : "Live availability"}</p><h2>${isPl ? `Zarezerwuj ${apartment.name}` : `Book ${apartment.name}`}</h2><p>${isPl ? "Airbnb pokaże końcową cenę, zasady anulowania i wolne daty dla liczby gości." : "Airbnb shows the final price, cancellation policy and available dates for your party."}</p></div><a class="button button-light" href="${apartment.airbnb}" rel="noopener noreferrer">${isPl ? "Otwórz ofertę Airbnb" : "Open Airbnb listing"}</a></div></section>`;
   const crumbItems = isPl ? [{ name: "Strona główna", path: "/" }, { name: "Apartamenty", path: "/apartamenty/" }, { name: apartment.name, path }] : [{ name: "Home", path: "/en/" }, { name: "Apartments", path: "/en/#apartments" }, { name: apartment.name, path }];
   return layout({ title, description, path, body, lang, pageClass: "property-page", image: apartment.hero, schema: [apartmentSchema(apartment), breadcrumbSchema(crumbItems)], alternate: { pl: plPath, en: enPath }, preload: apartment.heroSmall });
