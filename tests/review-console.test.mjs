@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { join, dirname, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -60,7 +60,10 @@ test('actual generator writes review page and keeps it out of marketing navigati
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
   const temp = await mkdtemp(join(tmpdir(), 'stayinpoznan-review-'));
   try {
-    await cp(root, temp, { recursive: true, filter: path => !path.includes('/.git') });
+    // The fixture replaces the public event input. Keep its build independent
+    // of event HTML committed by earlier real publication runs.
+    await cp(root, temp, { recursive: true, filter: path => !path.includes('/.git')
+      && !/^wydarzenia[\\/]poznan-evt-\d{6,}(?:[\\/]|$)/.test(relative(root, path)) });
     await writeFile(join(temp, 'content/public/events.json'), JSON.stringify({ schema: 'pzn.public-events.v1', events: [event] }));
     const env = { ...process.env, STAY_BUILD_DATE: now.toISOString() };
     await exec(process.execPath, ['scripts/build.mjs'], { cwd: temp, env });

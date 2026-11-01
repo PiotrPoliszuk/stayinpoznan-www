@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { join, dirname, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -80,7 +80,10 @@ test('actual build adds stable pages and guide, escapes sources, retires past pr
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
   const temp = await mkdtemp(join(tmpdir(), 'stayinpoznan-build-'));
   try {
-    await cp(root, temp, { recursive: true, filter: path => !path.includes('/.git') });
+    // The fixture replaces the public event input. Keep its build independent
+    // of event HTML committed by earlier real publication runs.
+    await cp(root, temp, { recursive: true, filter: path => !path.includes('/.git')
+      && !/^wydarzenia[\\/]poznan-evt-\d{6,}(?:[\\/]|$)/.test(relative(root, path)) });
     await writeFile(join(temp, 'content/public/events.json'), JSON.stringify(mergeEvents(null, normalizeEvents(feed(fact), now))));
     await writeFile(join(temp, 'content/public/ratings.json'), JSON.stringify(normalizeRatings({ schema: 'stayinpoznan.ratings.v1', ratings: [rating] }, now)));
     const env = { ...process.env, STAY_BUILD_DATE: now.toISOString() };
