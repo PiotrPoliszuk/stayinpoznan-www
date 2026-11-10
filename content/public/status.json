@@ -1,7 +1,7 @@
 {
   "schema": "stayinpoznan.publication-status.v1",
-  "checked_at": "2026-11-09T23:01:31.765Z",
-  "workflow_url": "https://github.com/PiotrPoliszuk/stayinpoznan-www/actions/runs/42716935437",
+  "checked_at": "2026-11-10T12:38:50.379Z",
+  "workflow_url": "https://github.com/PiotrPoliszuk/stayinpoznan-www/actions/runs/42817484018",
   "schedule": {
     "cron": "15 4 * * *",
     "timezone": "UTC"
@@ -10,8 +10,8 @@
     {
       "source": "events",
       "state": "read",
-      "checked_at": "2026-11-09T23:01:31.765Z",
-      "last_success_at": "2026-11-09T23:01:31.765Z",
+      "checked_at": "2026-11-10T12:38:50.379Z",
+      "last_success_at": "2026-11-10T12:38:50.379Z",
       "latest_observed_at": "2026-11-07T12:38:10.037Z",
       "cached_records": 50,
       "acquisition": "repository-snapshot",
@@ -20,8 +20,8 @@
     {
       "source": "ratings",
       "state": "read",
-      "checked_at": "2026-11-09T23:01:31.765Z",
-      "last_success_at": "2026-11-09T23:01:31.765Z",
+      "checked_at": "2026-11-10T12:38:50.379Z",
+      "last_success_at": "2026-11-10T12:38:50.379Z",
       "latest_observed_at": "2026-11-08T07:13:14.000Z",
       "cached_records": 3,
       "acquisition": "repository-rating-observation"
@@ -29,7 +29,7 @@
     {
       "source": "reviews",
       "state": "not-configured",
-      "checked_at": "2026-11-09T23:01:31.765Z",
+      "checked_at": "2026-11-10T12:38:50.379Z",
       "last_success_at": null,
       "latest_observed_at": null,
       "cached_records": 0
