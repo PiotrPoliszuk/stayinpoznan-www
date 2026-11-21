@@ -19,3 +19,9 @@ https://stayinpoznan-www.pages.dev/*
 
 https://:version.stayinpoznan-www.pages.dev/*
   X-Robots-Tag: noindex
+
+# PZN static preview WEB-2026-000002
+https://content-factory-web-2026-000002.stayinpoznan-www.pages.dev/*
+  ! X-Frame-Options
+  Content-Security-Policy: frame-ancestors https://appfactory.pzn.me https://mission.pzn.me;
+  X-Robots-Tag: noindex
