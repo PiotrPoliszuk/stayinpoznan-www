@@ -5,16 +5,16 @@
       "kind": "listing",
       "slug": "ratusz-view",
       "rating": 4.88,
-      "reviews": 183,
-      "observed_at": "2026-11-24T07:49:18Z",
+      "reviews": 184,
+      "observed_at": "2026-11-25T07:19:29Z",
       "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
       "method": "public-page-observation"
     },
     {
       "kind": "host",
       "rating": 4.86,
-      "reviews": 359,
-      "observed_at": "2026-11-24T07:49:18Z",
+      "reviews": 361,
+      "observed_at": "2026-11-25T07:19:29Z",
       "source_url": "https://www.airbnb.com/rooms/1396133241621872627",
       "method": "public-page-observation",
       "source_section": "host",
@@ -24,8 +24,8 @@
       "kind": "listing",
       "slug": "koziolki-view",
       "rating": 4.85,
-      "reviews": 176,
-      "observed_at": "2026-11-24T07:49:18Z",
+      "reviews": 177,
+      "observed_at": "2026-11-25T07:19:29Z",
       "source_url": "https://www.airbnb.com/rooms/1396324973760158951",
       "method": "public-page-observation"
     }
